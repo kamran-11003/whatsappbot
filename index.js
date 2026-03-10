@@ -58,5 +58,23 @@ app.post('/webhook', async (req, res) => {
   }
 });
 
+// ─── Privacy Policy ──────────────────────────────────────────────────────────
+app.get('/privacy', (req, res) => {
+  res.send(`
+    <html><body style="font-family:sans-serif;max-width:600px;margin:40px auto;padding:0 20px">
+      <h1>Privacy Policy</h1>
+      <p>This WhatsApp bot is operated by Governor House and is used to provide citizen services.</p>
+      <h2>Data We Collect</h2>
+      <p>We collect your CNIC number, phone number, and location (city/area) solely to process your service request.</p>
+      <h2>How We Use Your Data</h2>
+      <p>Your data is used only to respond to your service request within this WhatsApp conversation. We do not share your data with third parties.</p>
+      <h2>Data Retention</h2>
+      <p>Session data is stored temporarily in memory and is cleared when the server restarts.</p>
+      <h2>Contact</h2>
+      <p>For any privacy concerns, contact us via the Governor House official channels.</p>
+    </body></html>
+  `);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀  Governor House Bot running on port ${PORT}`));
