@@ -43,10 +43,9 @@ app.post('/webhook', async (req, res) => {
     const session = getSession(from);
 
     // Very first contact — user hasn't been greeted yet
-    if (session.step === 'cnic' && !session._greeted) {
+    if (session.step === 'lang_select' && !session._greeted) {
       setSession(from, { _greeted: true });
-      const lang = session.lang || 'en';
-      await sendMessage(from, strings[lang].askCnic);
+      await sendMessage(from, strings.askLang);
       return res.sendStatus(200);
     }
 
