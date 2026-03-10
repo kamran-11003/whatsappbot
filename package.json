@@ -1,0 +1,20 @@
+{
+  "name": "governor-house-whatsapp-bot",
+  "version": "1.0.0",
+  "description": "Governor House WhatsApp Citizen Services Bot — bilingual (English / Urdu)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
