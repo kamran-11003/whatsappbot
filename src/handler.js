@@ -4,7 +4,7 @@ const { sendMessage }                          = require('./whatsapp');
 const { getSession, setSession, softReset, hardReset } = require('./session');
 const strings                                  = require('./strings');
 const { DEPARTMENTS, DEPARTMENTS_UR, PROVINCES, PROVINCES_UR } = require('./services');
-const { getDetail }                            = require('./seed');
+const { getDeptDetails }                       = require('./seed');
 
 // Validation helpers
 const isCnic    = (v) => /^\d{13}$/.test(v);
@@ -25,19 +25,32 @@ async function handleIncoming(phone, text) {
   const input = norm(text);
   const lower = normLower(text);
 
+  // ── Initial language selection (handled before any global shortcuts) ───────
+  if (step === 'lang_select') {
+    if (input === '1') {
+      setSession(phone, { lang: 'en', step: 'cnic' });
+      return sendMessage(phone, strings.en.askCnic);
+    }
+    if (input === '2') {
+      setSession(phone, { lang: 'ur', step: 'cnic' });
+      return sendMessage(phone, strings.ur.askCnic);
+    }
+    return sendMessage(phone, strings.askLang);
+  }
+
   // ── Global hard-reset keyword ──────────────────────────────────────────────
   if (lower === 'reset') {
     hardReset(phone);
-    return sendMessage(phone, strings.en.askCnic);
+    return sendMessage(phone, strings.askLang);
   }
 
   // ── Global "menu" keyword (only after registration) ────────────────────────
-  if ((lower === 'menu' || lower === 'مینو') && step !== 'cnic' && step !== 'phone' && step !== 'location') {
+  if ((lower === 'menu' || lower === 'مینو') && step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
     softReset(phone);
     return sendMenu(phone, lang);
   }
 
-  if ((lower === 'bye' || lower === 'exit') && step !== 'cnic' && step !== 'phone' && step !== 'location') {
+  if ((lower === 'bye' || lower === 'exit' || lower === 'quit' || lower === 'باہر' || lower === 'خروج') && step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
     softReset(phone);
     return sendMessage(phone, s.goodbye);
   }
@@ -62,20 +75,9 @@ async function handleIncoming(phone, text) {
     if (!isPhone(digits)) {
       return sendMessage(phone, s.invalidPhone);
     }
-    setSession(phone, { contact: digits, step: 'location' });
-    return sendMessage(phone, s.askLocation);
-  }
-
-  // ══════════════════════════════════════════════════════════════════════════
-  // STEP 3 — LOCATION
-  // ══════════════════════════════════════════════════════════════════════════
-  if (step === 'location') {
-    if (input.length < 2) {
-      return sendMessage(phone, s.askLocation);
-    }
-    setSession(phone, { location: input, step: 'menu' });
-    const { cnic, contact } = getSession(phone);
-    await sendMessage(phone, s.registered(cnic, contact, input));
+    const { cnic } = getSession(phone);
+    setSession(phone, { contact: digits, step: 'menu' });
+    await sendMessage(phone, s.registered(cnic, digits));
     return sendMenu(phone, lang);
   }
 
@@ -108,6 +110,12 @@ async function handleIncoming(phone, text) {
   if (step === 'province') {
     const num = parseInt(input, 10);
 
+    // 0 = back to main menu
+    if (num === 0) {
+      softReset(phone);
+      return sendMenu(phone, lang);
+    }
+
     if (!isNaN(num) && num >= 1 && num <= 4) {
       const provinceIndex = num - 1;
       const deptIndex     = session.dept;
@@ -115,7 +123,7 @@ async function handleIncoming(phone, text) {
       const provinceName  = lang === 'ur' ? PROVINCES_UR[provinceIndex] : PROVINCES[provinceIndex];
 
       // Get full seeded detail record
-      const detail = getDetail(deptIndex, provinceIndex);
+      const detail = getDeptDetails(deptIndex, lang);
 
       // Return to menu step, keep profile
       softReset(phone);
@@ -124,7 +132,7 @@ async function handleIncoming(phone, text) {
         return sendMessage(phone, s.noService(deptName, provinceName));
       }
 
-      return sendMessage(phone, s.detailCard(detail, detail.steps));
+      return sendMessage(phone, detail);
     }
 
     // Invalid province input

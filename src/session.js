@@ -1,17 +1,17 @@
 // ─── Session Store ────────────────────────────────────────────────────────────
 // Steps in order:
-//   'cnic'     → waiting for 13-digit CNIC
-//   'phone'    → waiting for 11-digit contact number
-//   'location' → waiting for city/area text
-//   'menu'     → main department menu
-//   'province' → waiting for province choice (after dept selected)
-//   'lang'     → waiting for language choice (option 13)
+//   'lang_select' → waiting for initial language choice (1=EN, 2=UR)
+//   'cnic'        → waiting for 13-digit CNIC
+//   'phone'       → waiting for 11-digit contact number
+//   'menu'        → main department menu
+//   'province'    → waiting for province choice (after dept selected)
+//   'lang'        → waiting for language choice (option 13)
 
 const sessions = new Map();
 
 const DEFAULT_SESSION = {
   lang:     'en',
-  step:     'cnic',   // ← first step for every new user
+  step:     'lang_select', // ← first step for every new user
   cnic:     null,
   contact:  null,
   location: null,

@@ -1,6 +1,13 @@
 // ─── Bilingual message strings ───────────────────────────────────────────────
 
 const strings = {
+  askLang:
+    `👋 *Welcome to Governor House Info System!*\n` +
+    `*گورنر ہاؤس انفارمیشن سسٹم میں خوش آمدید!*\n\n` +
+    `Please select your language / براہ کرم زبان منتخب کریں:\n\n` +
+    `1️⃣  English\n` +
+    `2️⃣  اردو (Urdu)`,
+
   en: {
     askCnic:
       `👋 *Welcome to the Governor House Info System!*\n\n` +
@@ -25,11 +32,10 @@ const strings = {
       `Please enter your *city or area*.\n\n` +
       `_Example: Karachi, Lahore, Peshawar_`,
 
-    registered: (cnic, contact, location) =>
+    registered: (cnic, contact) =>
       `✅ *Registration complete!*\n\n` +
       `📋 CNIC: ${cnic}\n` +
-      `📞 Contact: ${contact}\n` +
-      `📍 Location: ${location}\n\n` +
+      `📞 Contact: ${contact}\n\n` +
       `You can now access all government services. 👇`,
 
     menu:
@@ -49,13 +55,14 @@ const strings = {
       `1️⃣1️⃣  Immigration & Passport\n` +
       `1️⃣2️⃣  Pakistan Customs\n` +
       `1️⃣3️⃣  Language Selection 🌐\n\n` +
-      `_Type 0–13 to select._`,
+      `_Type 0–13 to select. Type *exit* to quit._`,
 
     selectProvince: (dept) =>
       `You selected *${dept}*.\n\n` +
       `Please choose your *province*:\n\n` +
-      `1️⃣  Sindh\n2️⃣  Punjab\n3️⃣  Khyber Pakhtunkhwa (KP)\n4️⃣  Federal / ICT\n\n` +
-      `_Type 1–4 to select._`,
+      `1️⃣  Sindh\n2️⃣  Punjab\n3️⃣  Khyber Pakhtunkhwa (KP)\n4️⃣  Federal / ICT\n` +
+      `0️⃣  Back to Menu\n\n` +
+      `_Type 1–4 to select, or 0 to go back._`,
 
     detailCard: (d, steps) => {
       let msg =
@@ -113,11 +120,10 @@ const strings = {
       `براہ کرم اپنا *شہر یا علاقہ* درج کریں۔\n\n` +
       `_مثال: کراچی، لاہور، پشاور_`,
 
-    registered: (cnic, contact, location) =>
+    registered: (cnic, contact) =>
       `✅ *رجسٹریشن مکمل!*\n\n` +
       `📋 شناختی کارڈ: ${cnic}\n` +
-      `📞 موبائل: ${contact}\n` +
-      `📍 مقام: ${location}\n\n` +
+      `📞 موبائل: ${contact}\n\n` +
       `اب آپ تمام سرکاری خدمات تک رسائی حاصل کر سکتے ہیں۔ 👇`,
 
     menu:
@@ -137,13 +143,14 @@ const strings = {
       `1️⃣1️⃣  امیگریشن اینڈ پاسپورٹ\n` +
       `1️⃣2️⃣  پاکستان کسٹمز\n` +
       `1️⃣3️⃣  زبان کا انتخاب 🌐\n\n` +
-      `_0 سے 13 تک نمبر ٹائپ کریں۔_`,
+      `_0 سے 13 تک نمبر ٹائپ کریں۔ باہر نکلنے کے لیے *exit* ٹائپ کریں۔_`,
 
     selectProvince: (dept) =>
       `آپ نے *${dept}* منتخب کیا۔\n\n` +
       `اپنا *صوبہ* منتخب کریں:\n\n` +
-      `1️⃣  سندھ\n2️⃣  پنجاب\n3️⃣  خیبر پختونخوا\n4️⃣  وفاقی / آئی سی ٹی\n\n` +
-      `_1 سے 4 تک نمبر ٹائپ کریں۔_`,
+      `1️⃣  سندھ\n2️⃣  پنجاب\n3️⃣  خیبر پختونخوا\n4️⃣  وفاقی / آئی سی ٹی\n` +
+      `0️⃣  مینو پر واپس\n\n` +
+      `_1 سے 4 تک نمبر ٹائپ کریں، یا واپس کے لیے 0۔_`,
 
     detailCard: (d, steps) => {
       let msg =
