@@ -58,7 +58,20 @@ app.post('/webhook', async (req, res) => {
   }
 });
 
-// ─── Privacy Policy ──────────────────────────────────────────────────────────
+// ─── Privacy Policy & Terms ───────────────────────────────────────────────────
+app.get('/terms', (req, res) => {
+  res.send(`
+    <html><body style="font-family:sans-serif;max-width:600px;margin:40px auto;padding:0 20px">
+      <h1>Terms of Service</h1>
+      <p>By using this WhatsApp bot, you agree to provide accurate information and use the service solely for legitimate citizen service requests directed to Governor House.</p>
+      <h2>Acceptable Use</h2>
+      <p>This service is intended for Pakistani citizens seeking government services. Misuse or abuse of this service is prohibited.</p>
+      <h2>Disclaimer</h2>
+      <p>This bot is provided as-is. Response times may vary depending on service availability.</p>
+    </body></html>
+  `);
+});
+
 app.get('/privacy', (req, res) => {
   res.send(`
     <html><body style="font-family:sans-serif;max-width:600px;margin:40px auto;padding:0 20px">
