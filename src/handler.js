@@ -12,59 +12,74 @@ const isPhone   = (v) => /^03\d{9}$/.test(v);
 const norm      = (t) => t.trim();
 const normLower = (t) => t.toLowerCase().trim();
 
-// ─── Send the main menu as an interactive list ───────────────────────────────
+// ─── Send the main menu as an interactive list (page 1, max 10 rows) ─────────
 async function sendMenu(phone, lang) {
   if (lang === 'ur') {
     await sendList(phone,
       '🏛️ *NITB سٹیزن سروسز گائیڈ*\n\nسروس منتخب کریں:',
       'سروس دیکھیں',
-      [
-        { title: 'سرکاری خدمات', rows: [
-          { id: '0', title: 'شکایت دیکھیں' },
-          { id: '1', title: 'نادرا' },
-          { id: '2', title: 'پولیس' },
-          { id: '3', title: 'ٹریفک پولیس' },
-          { id: '4', title: 'کے الیکٹرک' },
-          { id: '5', title: 'کے ایم سی' },
-          { id: '6', title: 'سوئی گیس' },
-          { id: '7', title: 'واٹر بورڈ' },
-          { id: '8', title: 'پاکستان بیت المال' },
-          { id: '9', title: 'بے نظیر انکم سپورٹ' },
-        ]},
-        { title: 'مزید خدمات', rows: [
-          { id: '10', title: 'زکوٰۃ و عشر' },
-          { id: '11', title: 'امیگریشن و پاسپورٹ' },
-          { id: '12', title: 'پاکستان کسٹمز' },
-          { id: '13', title: 'زبان تبدیل کریں 🌐' },
-          { id: 'settings', title: '⚙️ ترتیبات' },
-        ]},
-      ]
+      [{ title: 'سرکاری خدمات', rows: [
+        { id: '0', title: 'شکایت دیکھیں' },
+        { id: '1', title: 'نادرا' },
+        { id: '2', title: 'پولیس' },
+        { id: '3', title: 'ٹریفک پولیس' },
+        { id: '4', title: 'کے الیکٹرک' },
+        { id: '5', title: 'کے ایم سی' },
+        { id: '6', title: 'سوئی گیس' },
+        { id: '7', title: 'واٹر بورڈ' },
+        { id: '8', title: 'پاکستان بیت المال' },
+        { id: 'menu_p2', title: '➡️ مزید خدمات' },
+      ]}]
     );
   } else {
     await sendList(phone,
       '🏛️ *NITB Citizen Services Guide*\n\nPlease select a service:',
       'View Services',
-      [
-        { title: 'Government Services', rows: [
-          { id: '0', title: 'View Complaint' },
-          { id: '1', title: 'NADRA' },
-          { id: '2', title: 'Police' },
-          { id: '3', title: 'Traffic Police' },
-          { id: '4', title: 'K Electric' },
-          { id: '5', title: 'KMC' },
-          { id: '6', title: 'Sui Gas' },
-          { id: '7', title: 'Water Board' },
-          { id: '8', title: 'Pakistan Bait ul Maal' },
-          { id: '9', title: 'Benazir Income Support' },
-        ]},
-        { title: 'More Services', rows: [
-          { id: '10', title: 'Zakat & Ushr Dept' },
-          { id: '11', title: 'Immigration & Passport' },
-          { id: '12', title: 'Pakistan Customs' },
-          { id: '13', title: 'Language Selection 🌐' },
-          { id: 'settings', title: '⚙️ Settings' },
-        ]},
-      ]
+      [{ title: 'Government Services', rows: [
+        { id: '0', title: 'View Complaint' },
+        { id: '1', title: 'NADRA' },
+        { id: '2', title: 'Police' },
+        { id: '3', title: 'Traffic Police' },
+        { id: '4', title: 'K Electric' },
+        { id: '5', title: 'KMC' },
+        { id: '6', title: 'Sui Gas' },
+        { id: '7', title: 'Water Board' },
+        { id: '8', title: 'Pakistan Bait ul Maal' },
+        { id: 'menu_p2', title: '➡️ More Services' },
+      ]}]
+    );
+  }
+}
+
+// ─── Menu page 2 (remaining services, max 10 rows) ────────────────────────────
+async function sendMenuPage2(phone, lang) {
+  if (lang === 'ur') {
+    await sendList(phone,
+      '🏛️ *مزید سرکاری خدمات*',
+      'سروس دیکھیں',
+      [{ title: 'مزید خدمات', rows: [
+        { id: '9',  title: 'بے نظیر انکم سپورٹ' },
+        { id: '10', title: 'زکوٰۃ و عشر' },
+        { id: '11', title: 'امیگریشن و پاسپورٹ' },
+        { id: '12', title: 'پاکستان کسٹمز' },
+        { id: '13', title: 'زبان تبدیل کریں 🌐' },
+        { id: 'settings', title: '⚙️ ترتیبات' },
+        { id: 'menu_p1', title: '⬅️ واپس' },
+      ]}]
+    );
+  } else {
+    await sendList(phone,
+      '🏛️ *More Government Services*',
+      'View Services',
+      [{ title: 'More Services', rows: [
+        { id: '9',  title: 'Benazir Income Support' },
+        { id: '10', title: 'Zakat & Ushr Dept' },
+        { id: '11', title: 'Immigration & Passport' },
+        { id: '12', title: 'Pakistan Customs' },
+        { id: '13', title: 'Language Selection 🌐' },
+        { id: 'settings', title: '⚙️ Settings' },
+        { id: 'menu_p1', title: '⬅️ Back' },
+      ]}]
     );
   }
 }
@@ -198,6 +213,16 @@ async function handleIncoming(phone, text) {
   // STEP 4 — MAIN MENU
   // ══════════════════════════════════════════════════════════════════════════
   if (step === 'menu') {
+    // Pagination
+    if (lower === 'menu_p2') return sendMenuPage2(phone, lang);
+    if (lower === 'menu_p1') return sendMenu(phone, lang);
+
+    // Settings via list selection
+    if (lower === 'settings') {
+      setSession(phone, { step: 'settings' });
+      return sendSettings(phone, lang, s);
+    }
+
     const num = parseInt(input, 10);
 
     // Language selection
