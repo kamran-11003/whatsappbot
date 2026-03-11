@@ -3,19 +3,21 @@
 //   'lang_select' → waiting for initial language choice (1=EN, 2=UR)
 //   'cnic'        → waiting for 13-digit CNIC
 //   'phone'       → waiting for 11-digit contact number
-//   'menu'        → main department menu
-//   'province'    → waiting for province choice (after dept selected)
-//   'lang'        → waiting for language choice (option 13)
+//   'location'    → waiting for location choice (1=Islamabad, 2=Punjab, 3=KPK)
+//   'menu'        → main service menu
+//   'lang'        → waiting for language switch choice
+//   'settings'    → settings menu
+//   'set_location'→ waiting for free-text location update
 
 const sessions = new Map();
 
 const DEFAULT_SESSION = {
   lang:     'en',
-  step:     'lang_select', // ← first step for every new user
+  step:     'lang_select',
   cnic:     null,
   contact:  null,
-  location: null,
-  dept:     null,
+  location: null,   // 'islamabad' | 'punjab' | 'kpk'
+  service:  null,   // 0–7 index
 };
 
 function getSession(phone) {
@@ -29,7 +31,7 @@ function setSession(phone, data) {
   sessions.set(phone, { ...getSession(phone), ...data });
 }
 
-// Soft reset — keeps user profile, goes back to menu
+// Soft reset — keeps profile + location, returns to menu
 function softReset(phone) {
   const { lang, cnic, contact, location } = getSession(phone);
   sessions.set(phone, { ...DEFAULT_SESSION, lang, step: 'menu', cnic, contact, location });

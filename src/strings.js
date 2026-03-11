@@ -4,200 +4,138 @@ const strings = {
   askLang:
     `السلام علیکم! Welcome to NITB Citizen Services Guide 🇵🇰\n\n` +
     `I will help you find the right government app and service center for your needs.\n\n` +
-    `Please select your language / براہ کرم زبان منتخب کریں:\n\n` +
-    `1️⃣  English\n` +
-    `2️⃣  اردو (Urdu)`,
+    `Please select your language / براہ کرم زبان منتخب کریں:`,
 
   en: {
     askCnic:
       `👋 *Welcome to NITB Citizen Services Guide!*\n\n` +
-      `Please enter your *CNIC number* (e.g., 12345-1234567-1 or 13 digits without dashes).\n\n` +
-      `_Example: 4210112345671_`,
+      `Please enter your *CNIC number* to get started.\n\n` +
+      `_Example: 4210112345671 (13 digits, no dashes)_`,
 
     invalidCnic:
       `❌ Invalid CNIC. Please enter exactly *13 digits* with no spaces or dashes.\n\n` +
       `_Example: 4210112345671_`,
 
     askPhone:
-      `✅ CNIC saved.\n\n` +
-      `Please enter your *contact number* (11 digits, starting with 03).\n\n` +
+      `✅ CNIC verified!\n\n` +
+      `Now please enter your *mobile number*:\n\n` +
       `_Example: 03001234567_`,
 
     invalidPhone:
-      `❌ Invalid number. Please enter an *11-digit* Pakistani mobile number.\n\n` +
+      `❌ Invalid number. Please enter an *11-digit* Pakistani mobile number starting with 03.\n\n` +
       `_Example: 03001234567_`,
-
-    askLocation:
-      `✅ Contact number saved.\n\n` +
-      `Please enter your *city or area*.\n\n` +
-      `_Example: Karachi, Lahore, Peshawar_`,
 
     registered: (cnic, contact) =>
       `✅ *Registration complete!*\n\n` +
       `📋 CNIC: ${cnic}\n` +
       `📞 Contact: ${contact}\n\n` +
-      `You can now access all government services. 👇`,
+      `Please select your location to continue. 👇`,
 
-    menu:
-      `🏛️ *NITB Citizen Services Guide*\n\n` +
-      `Please type the *option number* for your desired service:\n\n` +
-      `0️⃣  View Complaint\n` +
-      `1️⃣  NADRA\n` +
-      `2️⃣  Police\n` +
-      `3️⃣  Traffic Police\n` +
-      `4️⃣  K Electric\n` +
-      `5️⃣  KMC\n` +
-      `6️⃣  Sui Gas\n` +
-      `7️⃣  Water Board\n` +
-      `8️⃣  Pakistan Bait ul Maal\n` +
-      `9️⃣  Benazir Income Support\n` +
-      `🔟  Zakat & Ushr Department\n` +
-      `1️⃣1️⃣  Immigration & Passport\n` +
-      `1️⃣2️⃣  Pakistan Customs\n` +
-      `1️⃣3️⃣  Language Selection 🌐\n\n` +
-      `_Type 0–13 to select. Type *exit* to quit._`,
+    askLocation:
+      `📍 *Select Your Location*\n\n` +
+      `Please choose the region where you need services:`,
 
-    selectProvince: (dept) =>
-      `You selected *${dept}*.\n\n` +
-      `Please choose your *province*:\n\n` +
-      `1️⃣  Sindh\n2️⃣  Punjab\n3️⃣  Khyber Pakhtunkhwa (KP)\n4️⃣  Federal / ICT\n` +
-      `0️⃣  Back to Menu\n\n` +
-      `_Type 1–4 to select, or 0 to go back._`,
+    askService:
+      `✅ Location selected!\n\n` +
+      `Please choose the service you need 👇`,
 
-    detailCard: (d, steps) => {
-      let msg =
-        `✅ *${d.title}*\n\n` +
-        `📝 ${d.description}\n\n` +
-        `📞 *Helpline:* ${d.helpline}\n` +
-        `🏢 *Address:* ${d.address}\n` +
-        `🕐 *Timings:* ${d.timings}\n`;
-      if (d.appLink) msg += `📲 *App:* ${d.appLink}\n`;
-      if (d.webLink) msg += `🌐 *Web:* ${d.webLink}\n`;
-      if (steps && steps.length) {
-        msg += `\n📋 *How to use:*\n`;
-        steps.forEach((s, i) => { msg += `${i + 1}. ${s}\n`; });
-      }
-      msg += `\n_Type *menu* to return to the main menu._`;
-      return msg;
-    },
+    noService:
+      `⚠️ Sorry, this service detail is not available yet.\n\nPlease choose another service.`,
 
-    noService: (dept, province) =>
-      `⚠️ Sorry, *${dept}* is not available in *${province}* yet.\n\nType *menu* to choose another service.`,
+    nextAction:
+      `What would you like to do next?`,
 
     langSelect:
-      `🌐 *Select Language / زبان منتخب کریں*\n\n1️⃣  English\n2️⃣  اردو (Urdu)\n\n_Type 1 or 2._`,
+      `🌐 *Select Language / زبان منتخب کریں*\n\n` +
+      `Please choose your preferred language:`,
 
-    langChanged: `✅ Language set to *English*.\n\nType *menu* to see the main menu.`,
+    langChanged: `✅ Language set to *English*.\n\nPlease select your location to continue.`,
 
     invalidOption:
-      `❌ Invalid option. Please type a number from the menu.\n\nType *menu* to see the options again.`,
+      `❌ Invalid option. Please select from the options provided.`,
 
     settingsMenu: `⚙️ *Settings*\n\nWhat would you like to do?`,
 
     askLocationUpdate:
-      `📍 Please enter your *city or area*:\n\n_Example: Karachi, Lahore, Islamabad_`,
+      `📍 Please enter your *city or area*:\n\n_Example: Islamabad, Lahore, Peshawar_`,
 
     locationSaved: (loc) =>
-      `✅ Location updated to *${loc}*.\n\nType *menu* to continue.`,
+      `✅ Location noted as *${loc}*.\n\nPlease select your service location to continue.`,
 
     goodbye:
-      `Thank you for using NITB Citizen Services Guide.\nType *menu* anytime to start again.`,
+      `Thank you for using *NITB Citizen Services Guide!* 🙏🇵🇰\n\n` +
+      `We hope we were able to help you.\n\n` +
+      `To start a new inquiry, please enter your *CNIC number*:`,
+
+    anotherService: `Returning to service selection. Please choose a service:`,
+
+    changeLocation: `📍 Please select your location again:`,
   },
 
   ur: {
     askCnic:
       `👋 *NITB سٹیزن سروسز گائیڈ میں خوش آمدید!*\n\n` +
-      `براہ کرم اپنا *شناختی کارڈ نمبر* درج کریں (مثال: 12345-1234567-1 یا 13 ہندسے بغیر ڈیش)۔\n\n` +
-      `_مثال: 4210112345671_`,
+      `شروع کرنے کے لیے براہ کرم اپنا *شناختی کارڈ نمبر* درج کریں۔\n\n` +
+      `_مثال: 4210112345671 (13 ہندسے، بغیر ڈیش)_`,
 
     invalidCnic:
       `❌ غلط شناختی کارڈ نمبر۔ براہ کرم بالکل *13 ہندسے* درج کریں۔\n\n` +
       `_مثال: 4210112345671_`,
 
     askPhone:
-      `✅ شناختی کارڈ نمبر محفوظ ہو گیا۔\n\n` +
-      `براہ کرم اپنا *موبائل نمبر* (11 ہندسے، 03 سے شروع) درج کریں۔\n\n` +
+      `✅ شناختی کارڈ تصدیق ہو گیا!\n\n` +
+      `اب براہ کرم اپنا *موبائل نمبر* درج کریں:\n\n` +
       `_مثال: 03001234567_`,
 
     invalidPhone:
-      `❌ غلط نمبر۔ براہ کرم *11 ہندسوں* والا موبائل نمبر درج کریں۔\n\n` +
+      `❌ غلط نمبر۔ براہ کرم 03 سے شروع ہونے والا *11 ہندسوں* کا موبائل نمبر درج کریں۔\n\n` +
       `_مثال: 03001234567_`,
-
-    askLocation:
-      `✅ موبائل نمبر محفوظ ہو گیا۔\n\n` +
-      `براہ کرم اپنا *شہر یا علاقہ* درج کریں۔\n\n` +
-      `_مثال: کراچی، لاہور، پشاور_`,
 
     registered: (cnic, contact) =>
       `✅ *رجسٹریشن مکمل!*\n\n` +
       `📋 شناختی کارڈ: ${cnic}\n` +
       `📞 موبائل: ${contact}\n\n` +
-      `اب آپ تمام سرکاری خدمات تک رسائی حاصل کر سکتے ہیں۔ 👇`,
+      `جاری رکھنے کے لیے براہ کرم اپنا مقام منتخب کریں۔ 👇`,
 
-    menu:
-      `🏛️ *NITB سٹیزن سروسز گائیڈ*\n\n` +
-      `اپنی مطلوبہ سروس کے لیے *نمبر* ٹائپ کریں:\n\n` +
-      `0️⃣  شکایت دیکھیں\n` +
-      `1️⃣  نادرا\n` +
-      `2️⃣  پولیس\n` +
-      `3️⃣  ٹریفک پولیس\n` +
-      `4️⃣  کے الیکٹرک\n` +
-      `5️⃣  کے ایم سی\n` +
-      `6️⃣  سوئی گیس\n` +
-      `7️⃣  واٹر بورڈ\n` +
-      `8️⃣  پاکستان بیت المال\n` +
-      `9️⃣  بے نظیر انکم سپورٹ\n` +
-      `🔟  زکوٰۃ و عشر ڈیپارٹمنٹ\n` +
-      `1️⃣1️⃣  امیگریشن اینڈ پاسپورٹ\n` +
-      `1️⃣2️⃣  پاکستان کسٹمز\n` +
-      `1️⃣3️⃣  زبان کا انتخاب 🌐\n\n` +
-      `_0 سے 13 تک نمبر ٹائپ کریں۔ باہر نکلنے کے لیے *exit* ٹائپ کریں۔_`,
+    askLocation:
+      `📍 *اپنا مقام منتخب کریں*\n\n` +
+      `براہ کرم وہ علاقہ منتخب کریں جہاں آپ کو خدمات درکار ہیں:`,
 
-    selectProvince: (dept) =>
-      `آپ نے *${dept}* منتخب کیا۔\n\n` +
-      `اپنا *صوبہ* منتخب کریں:\n\n` +
-      `1️⃣  سندھ\n2️⃣  پنجاب\n3️⃣  خیبر پختونخوا\n4️⃣  وفاقی / آئی سی ٹی\n` +
-      `0️⃣  مینو پر واپس\n\n` +
-      `_1 سے 4 تک نمبر ٹائپ کریں، یا واپس کے لیے 0۔_`,
+    askService:
+      `✅ مقام منتخب ہو گیا!\n\n` +
+      `براہ کرم مطلوبہ خدمت منتخب کریں 👇`,
 
-    detailCard: (d, steps) => {
-      let msg =
-        `✅ *${d.title}*\n\n` +
-        `📝 ${d.description}\n\n` +
-        `📞 *ہیلپ لائن:* ${d.helpline}\n` +
-        `🏢 *پتہ:* ${d.address}\n` +
-        `🕐 *اوقات:* ${d.timings}\n`;
-      if (d.appLink) msg += `📲 *ایپ:* ${d.appLink}\n`;
-      if (d.webLink) msg += `🌐 *ویب سائٹ:* ${d.webLink}\n`;
-      if (steps && steps.length) {
-        msg += `\n📋 *استعمال کا طریقہ:*\n`;
-        steps.forEach((s, i) => { msg += `${i + 1}. ${s}\n`; });
-      }
-      msg += `\n_مین مینو پر واپس جانے کے لیے *menu* ٹائپ کریں۔_`;
-      return msg;
-    },
+    noService:
+      `⚠️ معذرت، اس خدمت کی تفصیل ابھی دستیاب نہیں۔\n\nکوئی اور خدمت منتخب کریں۔`,
 
-    noService: (dept, province) =>
-      `⚠️ معذرت، *${dept}* کی سروس *${province}* میں ابھی دستیاب نہیں۔\n\n*menu* ٹائپ کریں۔`,
+    nextAction:
+      `آگے کیا کرنا چاہتے ہیں؟`,
 
     langSelect:
-      `🌐 *زبان منتخب کریں / Select Language*\n\n1️⃣  English\n2️⃣  اردو (Urdu)\n\n_1 یا 2 ٹائپ کریں۔_`,
+      `🌐 *زبان منتخب کریں / Select Language*\n\n` +
+      `براہ کرم اپنی پسندیدہ زبان منتخب کریں:`,
 
-    langChanged: `✅ زبان *اردو* میں تبدیل کر دی گئی۔\n\nمینو دیکھنے کے لیے *menu* ٹائپ کریں۔`,
+    langChanged: `✅ زبان *اردو* میں تبدیل کر دی گئی۔\n\nجاری رکھنے کے لیے اپنا مقام منتخب کریں۔`,
 
     invalidOption:
-      `❌ غلط آپشن۔ براہ کرم مینو سے نمبر ٹائپ کریں۔\n\n*menu* ٹائپ کریں۔`,
+      `❌ غلط آپشن۔ براہ کرم دیے گئے آپشنز میں سے منتخب کریں۔`,
 
     settingsMenu: `⚙️ *ترتیبات*\n\nکیا کرنا چاہتے ہیں؟`,
 
     askLocationUpdate:
-      `📍 اپنا *شہر یا علاقہ* درج کریں:\n\n_مثال: کراچی، لاہور، اسلام آباد_`,
+      `📍 اپنا *شہر یا علاقہ* درج کریں:\n\n_مثال: اسلام آباد، لاہور، پشاور_`,
 
     locationSaved: (loc) =>
-      `✅ مقام *${loc}* محفوظ ہو گیا۔\n\n*menu* ٹائپ کریں۔`,
+      `✅ مقام *${loc}* نوٹ ہو گیا۔\n\nجاری رکھنے کے لیے اپنا سروس مقام منتخب کریں۔`,
 
     goodbye:
-      `NITB سٹیزن سروسز گائیڈ استعمال کرنے کا شکریہ۔\nدوبارہ شروع کرنے کے لیے *menu* ٹائپ کریں۔`,
+      `*NITB سٹیزن سروسز گائیڈ* استعمال کرنے کا شکریہ! 🙏🇵🇰\n\n` +
+      `ہمیں امید ہے کہ ہم آپ کی مدد کر سکے۔\n\n` +
+      `نئی درخواست کے لیے اپنا *شناختی کارڈ نمبر* درج کریں:`,
+
+    anotherService: `خدمت منتخب کریں:`,
+
+    changeLocation: `📍 براہ کرم اپنا مقام دوبارہ منتخب کریں:`,
   },
 };
 

@@ -3,86 +3,14 @@
 const { sendMessage, sendButtons, sendList }   = require('./whatsapp');
 const { getSession, setSession, softReset, hardReset } = require('./session');
 const strings                                  = require('./strings');
-const { DEPARTMENTS, DEPARTMENTS_UR, PROVINCES, PROVINCES_UR } = require('./services');
-const { getDeptDetails }                       = require('./seed');
+const { SERVICES, SERVICES_UR, LOCATION_KEY_MAP } = require('./services');
+const { getServiceDetail }                     = require('./seed');
 
 // Validation helpers
 const isCnic    = (v) => /^\d{13}$/.test(v);
 const isPhone   = (v) => /^03\d{9}$/.test(v);
 const norm      = (t) => t.trim();
 const normLower = (t) => t.toLowerCase().trim();
-
-// ─── Send the main menu as an interactive list (page 1, max 10 rows) ─────────
-async function sendMenu(phone, lang) {
-  if (lang === 'ur') {
-    await sendList(phone,
-      '🏛️ *NITB سٹیزن سروسز گائیڈ*\n\nسروس منتخب کریں:',
-      'سروس دیکھیں',
-      [{ title: 'سرکاری خدمات', rows: [
-        { id: '0', title: 'شکایت دیکھیں' },
-        { id: '1', title: 'نادرا' },
-        { id: '2', title: 'پولیس' },
-        { id: '3', title: 'ٹریفک پولیس' },
-        { id: '4', title: 'کے الیکٹرک' },
-        { id: '5', title: 'کے ایم سی' },
-        { id: '6', title: 'سوئی گیس' },
-        { id: '7', title: 'واٹر بورڈ' },
-        { id: '8', title: 'پاکستان بیت المال' },
-        { id: 'menu_p2', title: '➡️ مزید خدمات' },
-      ]}]
-    );
-  } else {
-    await sendList(phone,
-      '🏛️ *NITB Citizen Services Guide*\n\nPlease select a service:',
-      'View Services',
-      [{ title: 'Government Services', rows: [
-        { id: '0', title: 'View Complaint' },
-        { id: '1', title: 'NADRA' },
-        { id: '2', title: 'Police' },
-        { id: '3', title: 'Traffic Police' },
-        { id: '4', title: 'K Electric' },
-        { id: '5', title: 'KMC' },
-        { id: '6', title: 'Sui Gas' },
-        { id: '7', title: 'Water Board' },
-        { id: '8', title: 'Pakistan Bait ul Maal' },
-        { id: 'menu_p2', title: '➡️ More Services' },
-      ]}]
-    );
-  }
-}
-
-// ─── Menu page 2 (remaining services, max 10 rows) ────────────────────────────
-async function sendMenuPage2(phone, lang) {
-  if (lang === 'ur') {
-    await sendList(phone,
-      '🏛️ *مزید سرکاری خدمات*',
-      'سروس دیکھیں',
-      [{ title: 'مزید خدمات', rows: [
-        { id: '9',  title: 'بے نظیر انکم سپورٹ' },
-        { id: '10', title: 'زکوٰۃ و عشر' },
-        { id: '11', title: 'امیگریشن و پاسپورٹ' },
-        { id: '12', title: 'پاکستان کسٹمز' },
-        { id: '13', title: 'زبان تبدیل کریں 🌐' },
-        { id: 'settings', title: '⚙️ ترتیبات' },
-        { id: 'menu_p1', title: '⬅️ واپس' },
-      ]}]
-    );
-  } else {
-    await sendList(phone,
-      '🏛️ *More Government Services*',
-      'View Services',
-      [{ title: 'More Services', rows: [
-        { id: '9',  title: 'Benazir Income Support' },
-        { id: '10', title: 'Zakat & Ushr Dept' },
-        { id: '11', title: 'Immigration & Passport' },
-        { id: '12', title: 'Pakistan Customs' },
-        { id: '13', title: 'Language Selection 🌐' },
-        { id: 'settings', title: '⚙️ Settings' },
-        { id: 'menu_p1', title: '⬅️ Back' },
-      ]}]
-    );
-  }
-}
 
 // ─── Language selection buttons ────────────────────────────────────────────────
 async function sendLangButtons(phone, bodyText) {
@@ -92,52 +20,56 @@ async function sendLangButtons(phone, bodyText) {
   ]);
 }
 
-// ─── Province selection list ───────────────────────────────────────────────────
-async function sendProvinceList(phone, lang, deptName) {
-  if (lang === 'ur') {
-    await sendList(phone,
-      `آپ نے *${deptName}* منتخب کیا۔\n\nاپنا صوبہ منتخب کریں:`,
-      'صوبہ منتخب کریں',
-      [{ title: 'صوبہ منتخب کریں', rows: [
-        { id: '1', title: 'سندھ' },
-        { id: '2', title: 'پنجاب' },
-        { id: '3', title: 'خیبر پختونخوا' },
-        { id: '4', title: 'وفاقی / آئی سی ٹی' },
-        { id: '0', title: '⬅️ مینو پر واپس' },
-      ]}]
-    );
-  } else {
-    await sendList(phone,
-      `You selected *${deptName}*.\n\nPlease choose your province:`,
-      'Select Province',
-      [{ title: 'Select Province', rows: [
-        { id: '1', title: 'Sindh' },
-        { id: '2', title: 'Punjab' },
-        { id: '3', title: 'Khyber Pakhtunkhwa' },
-        { id: '4', title: 'Federal / ICT' },
-        { id: '0', title: '⬅️ Back to Menu' },
-      ]}]
-    );
-  }
+// ─── Location selection buttons (3 = fits WhatsApp button limit) ──────────────
+async function sendLocationButtons(phone, lang, s) {
+  await sendButtons(phone, s.askLocation, [
+    { id: 'loc_1', title: '📍 Islamabad' },
+    { id: 'loc_2', title: '📍 Punjab' },
+    { id: 'loc_3', title: '📍 KPK' },
+  ]);
+}
+
+// ─── Service selection list (8 rows = within 10-row limit) ────────────────────
+async function sendServiceMenu(phone, lang) {
+  const rows = (lang === 'ur' ? SERVICES_UR : SERVICES).map((name, i) => ({
+    id: String(i),
+    title: name,
+  }));
+  await sendList(
+    phone,
+    lang === 'ur'
+      ? '🏛️ *NITB سٹیزن سروسز*\n\nاپنی مطلوبہ خدمت منتخب کریں:'
+      : '🏛️ *NITB Citizen Services*\n\nPlease select the service you need:',
+    lang === 'ur' ? 'خدمت منتخب کریں' : 'Select Service',
+    [{ title: lang === 'ur' ? 'سرکاری خدمات' : 'Government Services', rows }]
+  );
+}
+
+// ─── After-detail action buttons ──────────────────────────────────────────────
+async function sendNextActions(phone, lang) {
+  const s = strings[lang];
+  await sendButtons(phone, s.nextAction, [
+    { id: 'another_service', title: lang === 'ur' ? '🔄 دوسری خدمت' : '🔄 Another Service' },
+    { id: 'change_location', title: lang === 'ur' ? '📍 مقام بدلیں' : '📍 Change Location' },
+    { id: 'end_session',     title: lang === 'ur' ? '✅ اختتام'     : '✅ End Session' },
+  ]);
 }
 
 // ─── Settings buttons ──────────────────────────────────────────────────────────
 async function sendSettings(phone, lang, s) {
   await sendButtons(phone, s.settingsMenu, [
-    { id: 'switch_lang', title: lang === 'ur' ? '🌐 زبان تبدیل' : '🌐 Switch Language' },
-    { id: 'set_location', title: lang === 'ur' ? '📍 مقام اپڈیٹ' : '📍 Update Location' },
-    { id: 'restart', title: lang === 'ur' ? '🔄 دوبارہ شروع' : '🔄 Restart' },
+    { id: 'switch_lang',    title: lang === 'ur' ? '🌐 زبان تبدیل'   : '🌐 Switch Language' },
+    { id: 'set_location',   title: lang === 'ur' ? '📍 مقام اپڈیٹ'  : '📍 Update Location' },
+    { id: 'restart',        title: lang === 'ur' ? '🔄 دوبارہ شروع' : '🔄 Restart' },
   ]);
 }
 
-// ─── After-detail action buttons ──────────────────────────────────────────────
-async function sendNextActions(phone, lang) {
-  await sendButtons(phone,
-    lang === 'ur' ? 'آگے کیا کریں؟' : 'What would you like to do next?', [
-    { id: 'menu', title: lang === 'ur' ? '🏠 مین مینو' : '🏠 Main Menu' },
-    { id: 'settings', title: lang === 'ur' ? '⚙️ ترتیبات' : '⚙️ Settings' },
-  ]);
-}
+// ─── Location key resolver (button IDs and plain text numbers) ────────────────
+const LOC_MAP = {
+  'loc_1': 'islamabad', 'loc_2': 'punjab', 'loc_3': 'kpk',
+  '1': 'islamabad', '2': 'punjab', '3': 'kpk',
+  'islamabad': 'islamabad', 'punjab': 'punjab', 'kpk': 'kpk',
+};
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
 async function handleIncoming(phone, text) {
@@ -147,7 +79,7 @@ async function handleIncoming(phone, text) {
   const input = norm(text);
   const lower = normLower(text);
 
-  // ── Initial language selection (handled before any global shortcuts) ───────
+  // ── Initial language selection ─────────────────────────────────────────────
   if (step === 'lang_select') {
     if (input === '1') {
       setSession(phone, { lang: 'en', step: 'cnic' });
@@ -166,28 +98,37 @@ async function handleIncoming(phone, text) {
     return sendLangButtons(phone, strings.askLang);
   }
 
-  // ── Global "menu" keyword (only after registration) ────────────────────────
-  if ((lower === 'menu' || lower === 'مینو') && step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
-    softReset(phone);
-    return sendMenu(phone, lang);
-  }
-
-  if ((lower === 'bye' || lower === 'exit' || lower === 'quit' || lower === 'باہر' || lower === 'خروج') && step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
-    softReset(phone);
-    return sendMessage(phone, s.goodbye);
-  }
-
   // ── Global settings keyword ────────────────────────────────────────────────
-  if ((lower === 'settings' || lower === 'ترتیبات') && step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
+  if ((lower === 'settings' || lower === 'ترتیبات') &&
+      step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
     setSession(phone, { step: 'settings' });
     return sendSettings(phone, lang, s);
+  }
+
+  // ── Global exit keyword ────────────────────────────────────────────────────
+  if ((lower === 'bye' || lower === 'exit' || lower === 'quit' ||
+       lower === 'باہر' || lower === 'خروج' || lower === 'end_session') &&
+      step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
+    hardReset(phone);
+    return sendLangButtons(phone, s.goodbye);
+  }
+
+  // ── After-detail action shortcuts ─────────────────────────────────────────
+  if (lower === 'another_service' && step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
+    softReset(phone);
+    await sendMessage(phone, s.anotherService);
+    return sendServiceMenu(phone, lang);
+  }
+  if (lower === 'change_location' && step !== 'cnic' && step !== 'phone' && step !== 'lang_select') {
+    setSession(phone, { step: 'location', location: null });
+    return sendLocationButtons(phone, lang, s);
   }
 
   // ══════════════════════════════════════════════════════════════════════════
   // STEP 1 — CNIC
   // ══════════════════════════════════════════════════════════════════════════
   if (step === 'cnic') {
-    const digits = input.replace(/[-\s]/g, ''); // strip dashes/spaces if any
+    const digits = input.replace(/[-\s]/g, '');
     if (!isCnic(digits)) {
       return sendMessage(phone, s.invalidCnic);
     }
@@ -204,85 +145,53 @@ async function handleIncoming(phone, text) {
       return sendMessage(phone, s.invalidPhone);
     }
     const { cnic } = getSession(phone);
-    setSession(phone, { contact: digits, step: 'menu' });
+    setSession(phone, { contact: digits, step: 'location' });
     await sendMessage(phone, s.registered(cnic, digits));
-    return sendMenu(phone, lang);
+    return sendLocationButtons(phone, lang, s);
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // STEP 4 — MAIN MENU
+  // STEP 3 — LOCATION SELECTION
+  // ══════════════════════════════════════════════════════════════════════════
+  if (step === 'location') {
+    const locKey = LOC_MAP[lower];
+    if (locKey) {
+      setSession(phone, { location: locKey, step: 'menu' });
+      await sendMessage(phone, s.askService);
+      return sendServiceMenu(phone, lang);
+    }
+    return sendLocationButtons(phone, lang, s);
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // STEP 4 — SERVICE MENU
   // ══════════════════════════════════════════════════════════════════════════
   if (step === 'menu') {
-    // Pagination
-    if (lower === 'menu_p2') return sendMenuPage2(phone, lang);
-    if (lower === 'menu_p1') return sendMenu(phone, lang);
-
-    // Settings via list selection
     if (lower === 'settings') {
       setSession(phone, { step: 'settings' });
       return sendSettings(phone, lang, s);
     }
 
     const num = parseInt(input, 10);
-
-    // Language selection
-    if (num === 13) {
-      setSession(phone, { step: 'lang' });
-      return sendLangButtons(phone, s.langSelect);
-    }
-
-    // Valid department 0–12
-    if (!isNaN(num) && num >= 0 && num <= 12) {
-      const deptName = lang === 'ur' ? DEPARTMENTS_UR[num] : DEPARTMENTS[num];
-      setSession(phone, { step: 'province', dept: num });
-      return sendProvinceList(phone, lang, deptName);
-    }
-
-    await sendMessage(phone, s.invalidOption);
-    return sendMenu(phone, lang);
-  }
-
-  // ══════════════════════════════════════════════════════════════════════════
-  // STEP 5 — PROVINCE SELECTION
-  // ══════════════════════════════════════════════════════════════════════════
-  if (step === 'province') {
-    const num = parseInt(input, 10);
-
-    // 0 = back to main menu
-    if (num === 0) {
-      softReset(phone);
-      return sendMenu(phone, lang);
-    }
-
-    if (!isNaN(num) && num >= 1 && num <= 4) {
-      const provinceIndex = num - 1;
-      const deptIndex     = session.dept;
-      const deptName      = lang === 'ur' ? DEPARTMENTS_UR[deptIndex] : DEPARTMENTS[deptIndex];
-      const provinceName  = lang === 'ur' ? PROVINCES_UR[provinceIndex] : PROVINCES[provinceIndex];
-
-      // Get full seeded detail record
-      const detail = getDeptDetails(deptIndex, lang);
-
-      // Return to menu step, keep profile
-      softReset(phone);
-
+    if (!isNaN(num) && num >= 0 && num <= 7) {
+      const locKey = session.location || 'islamabad';
+      const detail = getServiceDetail(locKey, num, lang);
+      setSession(phone, { service: num });
+      softReset(phone); // preserves location, sets step back to 'menu'
       if (!detail) {
-        await sendMessage(phone, s.noService(deptName, provinceName));
+        await sendMessage(phone, s.noService);
         return sendNextActions(phone, lang);
       }
-
       await sendMessage(phone, detail);
       return sendNextActions(phone, lang);
     }
 
-    // Invalid province input
-    const deptName = lang === 'ur' ? DEPARTMENTS_UR[session.dept] : DEPARTMENTS[session.dept];
     await sendMessage(phone, s.invalidOption);
-    return sendProvinceList(phone, lang, deptName);
+    return sendServiceMenu(phone, lang);
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // STEP 5b — SETTINGS
+  // STEP 5a — SETTINGS
   // ══════════════════════════════════════════════════════════════════════════
   if (step === 'settings') {
     if (lower === 'switch_lang') {
@@ -301,35 +210,35 @@ async function handleIncoming(phone, text) {
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // STEP 5c — SET LOCATION
+  // STEP 5b — SET LOCATION (free-text city/area note)
   // ══════════════════════════════════════════════════════════════════════════
   if (step === 'set_location') {
     if (input.length < 2) return sendMessage(phone, s.askLocationUpdate);
-    setSession(phone, { location: input, step: 'menu' });
+    setSession(phone, { step: 'location' });
     await sendMessage(phone, s.locationSaved(input));
-    return sendMenu(phone, lang);
+    return sendLocationButtons(phone, lang, s);
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // STEP 6 — LANGUAGE SELECTION
+  // STEP 5c — LANGUAGE SELECTION
   // ══════════════════════════════════════════════════════════════════════════
   if (step === 'lang') {
     if (input === '1') {
-      setSession(phone, { lang: 'en', step: 'menu' });
+      setSession(phone, { lang: 'en', step: 'location' });
       await sendMessage(phone, strings.en.langChanged);
-      return sendMenu(phone, 'en');
+      return sendLocationButtons(phone, 'en', strings.en);
     }
     if (input === '2') {
-      setSession(phone, { lang: 'ur', step: 'menu' });
+      setSession(phone, { lang: 'ur', step: 'location' });
       await sendMessage(phone, strings.ur.langChanged);
-      return sendMenu(phone, 'ur');
+      return sendLocationButtons(phone, 'ur', strings.ur);
     }
-    return sendMessage(phone, s.invalidOption);
+    return sendLangButtons(phone, s.langSelect);
   }
 
   // ── Fallback ───────────────────────────────────────────────────────────────
   await sendMessage(phone, s.invalidOption);
-  return sendMenu(phone, lang);
+  return sendServiceMenu(phone, lang);
 }
 
 module.exports = { handleIncoming };

@@ -1,42 +1,41 @@
-// ─── Service Link Configuration ──────────────────────────────────────────────
-// Structure: services[departmentKey][provinceKey] = { url, note }
-// provinceKey: 'sindh' | 'punjab' | 'kp' | 'federal'
-// departmentKey: matches DEPARTMENTS array index
+// ─── Service Configuration ────────────────────────────────────────────────────
+// New flow: Location (3) → Service (8)
+// Locations: islamabad | punjab | kpk
+// Services:  0=Vehicle Registration, 1=Property Tax, 2=Domicile Certificate,
+//            3=Birth Certificate, 4=Health Services, 5=Electricity Bill,
+//            6=Water Bill, 7=All Services
 
-const DEPARTMENTS = [
-  'View Complaint',         // 0
-  'NADRA',                  // 1
-  'Police',                 // 2
-  'Traffic Police',         // 3
-  'K Electric',             // 4
-  'KMC',                    // 5
-  'Sui Gas',                // 6
-  'Water Board',            // 7
-  'Pakistan Bait ul Maal',  // 8
-  'Benazir Income Support', // 9
-  'Zakat & Ushr',           // 10
-  'Immigration & Passport', // 11
-  'Pakistan Customs',       // 12
+const LOCATIONS    = ['Islamabad', 'Punjab', 'Khyber Pakhtunkhwa (KPK)'];
+const LOCATIONS_UR = ['اسلام آباد', 'پنجاب', 'خیبر پختونخواہ'];
+const LOCATION_KEYS = ['islamabad', 'punjab', 'kpk'];
+
+const SERVICES = [
+  '🚗 Vehicle Registration',    // 0
+  '🏠 Property Tax',            // 1
+  '💳 Domicile Certificate',    // 2
+  '📄 Birth Certificate',       // 3
+  '🏥 Health Services',         // 4
+  '⚡ Electricity Bill',        // 5
+  '💧 Water Bill',              // 6
+  '📋 All Services',            // 7
 ];
 
-const DEPARTMENTS_UR = [
-  'شکایت دیکھیں',
-  'نادرا',
-  'پولیس',
-  'ٹریفک پولیس',
-  'کے الیکٹرک',
-  'کے ایم سی',
-  'سوئی گیس',
-  'واٹر بورڈ',
-  'پاکستان بیت المال',
-  'بے نظیر انکم سپورٹ',
-  'زکوٰۃ و عشر',
-  'امیگریشن اینڈ پاسپورٹ',
-  'پاکستان کسٹمز',
+const SERVICES_UR = [
+  '🚗 گاڑی کی رجسٹریشن',      // 0
+  '🏠 جائیداد ٹیکس',           // 1
+  '💳 ڈومیسائل سرٹیفکیٹ',     // 2
+  '📄 پیدائش سرٹیفکیٹ',       // 3
+  '🏥 صحت کی خدمات',           // 4
+  '⚡ بجلی بل',                 // 5
+  '💧 پانی بل',                // 6
+  '📋 تمام خدمات',             // 7
 ];
 
-const PROVINCES = ['Sindh', 'Punjab', 'Khyber Pakhtunkhwa', 'Federal / ICT'];
-const PROVINCES_UR = ['سندھ', 'پنجاب', 'خیبر پختونخوا', 'وفاقی / آئی سی ٹی'];
+// Keep old exports for backwards-compat (used nowhere new)
+const DEPARTMENTS    = SERVICES;
+const DEPARTMENTS_UR = SERVICES_UR;
+const PROVINCES      = LOCATIONS;
+const PROVINCES_UR   = LOCATIONS_UR;
 
 // ─── Populate with your official URLs ────────────────────────────────────────
 // Replace placeholder URLs with actual government portal links.
@@ -123,13 +122,11 @@ const services = {
   },
 };
 
-const PROVINCE_KEYS = ['sindh', 'punjab', 'kp', 'federal'];
+const LOCATION_KEY_MAP = { '1': 'islamabad', '2': 'punjab', '3': 'kpk' };
 
-function getService(deptIndex, provinceIndex) {
-  const provinceKey = PROVINCE_KEYS[provinceIndex];
-  const deptData    = services[deptIndex];
-  if (!deptData || !deptData[provinceKey]) return null;
-  return deptData[provinceKey];
-}
-
-module.exports = { DEPARTMENTS, DEPARTMENTS_UR, PROVINCES, PROVINCES_UR, PROVINCE_KEYS, getService };
+module.exports = {
+  LOCATIONS, LOCATIONS_UR, LOCATION_KEYS, LOCATION_KEY_MAP,
+  SERVICES, SERVICES_UR,
+  // legacy aliases kept for any remaining references
+  DEPARTMENTS, DEPARTMENTS_UR, PROVINCES, PROVINCES_UR,
+};

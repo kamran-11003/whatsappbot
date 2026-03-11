@@ -1,325 +1,249 @@
-// ─── Department Details Seed Data ────────────────────────────────────────────
-// Shown to the user BEFORE the province selection prompt.
-// Each entry has English (en) and Urdu (ur) versions.
-// Index matches DEPARTMENTS array in services.js
+// ─── Service Detail Seed Data ─────────────────────────────────────────────────
+// Structure: details[locationKey][serviceIndex] = { en, ur }
+// locationKey: 'islamabad' | 'punjab' | 'kpk'
+// serviceIndex: 0–7 matching SERVICES array in services.js
+//   0=Vehicle Registration  1=Property Tax       2=Domicile Certificate
+//   3=Birth Certificate     4=Health Services    5=Electricity Bill
+//   6=Water Bill            7=All Services
 
-const deptDetails = [
+const FOOTER_EN =
+  '\n\n📞 *Need help?*\n' +
+  '• NITB Helpline: *051-111-648-2*\n' +
+  '• SMS: *8500*\n' +
+  '• Email: info@nitb.gov.pk\n\n' +
+  '⏰ *Service Centers Hours:*\n' +
+  'Monday – Friday: 9:00 AM – 5:00 PM\n' +
+  'Saturday: 9:00 AM – 2:00 PM\n\n' +
+  '💡 *Tip:* Keep your CNIC and relevant documents ready!';
 
-  // 0 — View Complaint
-  {
+const FOOTER_UR =
+  '\n\n📞 *مدد کی ضرورت؟*\n' +
+  '• این آئی ٹی بی ہیلپ لائن: *051-111-648-2*\n' +
+  '• ایس ایم ایس: *8500*\n' +
+  '• ای میل: info@nitb.gov.pk\n\n' +
+  '⏰ *مراکز کے اوقات:*\n' +
+  'پیر تا جمعہ: صبح 9:00 – شام 5:00\n' +
+  'ہفتہ: صبح 9:00 – دوپہر 2:00\n\n' +
+  '💡 *ٹِپ:* اپنا شناختی کارڈ اور متعلقہ دستاویزات تیار رکھیں!';
+
+function buildMsg(emoji, nameEn, nameUr, locEn, locUr, appEn, webEn, appUr, webUr, cenEn, cenUr, stEn, stUr) {
+  return {
     en:
-      '📌 *How to View / Submit a Complaint*\n\n' +
-      '• You can check the status of an existing complaint or lodge a new one.\n' +
-      '• Complaints are tracked through the provincial grievance portals.\n' +
-      '• Keep your complaint reference number handy.\n' +
-      '• Average response time: 3–7 working days.\n\n' +
-      '📞 NITB Helpline: *111-000-722*',
+      `✅ For your service "*${emoji} ${nameEn}*" in *${locEn}*, please use:\n\n` +
+      `📱 *${appEn}*\n\n` +
+      `🔹 Download from:\n• Google Play Store\n• Apple App Store\n\n` +
+      `🔹 Alternative: Visit ${webEn}\n\n` +
+      `📍 *Service Centers:*\n${cenEn}\n\n` +
+      `📝 *Steps:*\n${stEn}` + FOOTER_EN,
     ur:
-      '📌 *شکایت کیسے دیکھیں / درج کریں*\n\n' +
-      '• آپ موجودہ شکایت کی صورتحال چیک کر سکتے ہیں یا نئی درج کر سکتے ہیں۔\n' +
-      '• شکایات صوبائی گریوانس پورٹلز کے ذریعے ٹریک کی جاتی ہیں۔\n' +
-      '• اپنا شکایت حوالہ نمبر تیار رکھیں۔\n' +
-      '• اوسط جوابی وقت: 3 سے 7 کاری دن۔\n\n' +
-      '📞 NITB ہیلپ لائن: *111-000-722*',
-  },
+      `✅ *${locUr}* میں آپ کی خدمت "*${emoji} ${nameUr}*" کے لیے:\n\n` +
+      `📱 *${appUr}*\n\n` +
+      `🔹 ڈاؤن لوڈ کریں:\n• گوگل پلے اسٹور\n• ایپل ایپ اسٹور\n\n` +
+      `🔹 متبادل: ${webUr} وزٹ کریں\n\n` +
+      `📍 *خدمت مراکز:*\n${cenUr}\n\n` +
+      `📝 *اقدامات:*\n${stUr}` + FOOTER_UR,
+  };
+}
 
-  // 1 — NADRA
-  {
-    en:
-      '🪪 *NADRA — National Database & Registration Authority*\n\n' +
-      '• *CNIC* (Computerised National Identity Card) — new, renewal, duplicate\n' +
-      '• *NICOP* — National Identity Card for Overseas Pakistanis\n' +
-      '• *Smart Card* — biometric national ID card\n' +
-      '• *Birth Certificate* — online registration and verification\n' +
-      '• *Family Registration Certificate (FRC)*\n' +
-      '• *Pakistan Origin Card (POC)* for foreign nationals of Pakistani origin\n\n' +
-      '📞 NADRA Helpline: *1800*\n' +
-      '🕐 Office Hours: Mon–Sat, 9am–5pm',
-    ur:
-      '🪪 *نادرا — قومی ڈیٹابیس اور رجسٹریشن اتھارٹی*\n\n' +
-      '• *شناختی کارڈ* — نیا، تجدید، ڈپلیکیٹ\n' +
-      '• *نیکوپ* — بیرون ملک پاکستانیوں کا شناختی کارڈ\n' +
-      '• *سمارٹ کارڈ* — بایومیٹرک قومی شناختی کارڈ\n' +
-      '• *پیدائش سرٹیفکیٹ* — آن لائن رجسٹریشن اور تصدیق\n' +
-      '• *خاندانی رجسٹریشن سرٹیفکیٹ (ایف آر سی)*\n' +
-      '• *پاکستان اوریجن کارڈ (پی او سی)*\n\n' +
-      '📞 نادرا ہیلپ لائن: *1800*\n' +
-      '🕐 دفتری اوقات: پیر تا ہفتہ، صبح 9 سے شام 5 بجے',
-  },
-
-  // 2 — Police
-  {
-    en:
-      '👮 *Police Services*\n\n' +
-      '• *FIR (First Information Report)* — lodge online or in person\n' +
-      '• *Character Certificate* — for jobs, visa, education\n' +
-      '• *Police Verification* — tenant, servant, employee\n' +
-      '• *Missing Person Report*\n' +
-      '• *Stolen Vehicle / Mobile Report*\n' +
-      '• *Rescue 15* — emergency response\n\n' +
-      '🆘 Emergency: *15*\n' +
-      '📞 Complaints: *8787* (Punjab) / *1715* (Sindh)',
-    ur:
-      '👮 *پولیس سروسز*\n\n' +
-      '• *ایف آئی آر* — آن لائن یا ذاتی طور پر درج کریں\n' +
-      '• *کردار سرٹیفکیٹ* — ملازمت، ویزا، تعلیم کے لیے\n' +
-      '• *پولیس تصدیق* — کرایہ دار، ملازم، نوکر\n' +
-      '• *گمشدہ شخص کی رپورٹ*\n' +
-      '• *گمشدہ گاڑی / موبائل کی رپورٹ*\n' +
-      '• *ریسکیو 15* — ہنگامی ردعمل\n\n' +
-      '🆘 ہنگامی صورت: *15*\n' +
-      '📞 شکایات: *8787* (پنجاب) / *1715* (سندھ)',
-  },
-
-  // 3 — Traffic Police
-  {
-    en:
-      '🚦 *Traffic Police Services*\n\n' +
-      '• *Driving License* — new, renewal, duplicate, learner\n' +
-      '• *Challan / Fine Payment* — check and pay online\n' +
-      '• *Vehicle Registration Certificate (RC)* — duplicate, transfer\n' +
-      '• *Token Tax* — annual vehicle token tax payment\n' +
-      '• *Fitness Certificate* — mandatory for commercial vehicles\n' +
-      '• *International Driving Permit (IDP)*\n\n' +
-      '📞 Traffic Helpline: *1915*\n' +
-      '🌐 License portal available after selecting province',
-    ur:
-      '🚦 *ٹریفک پولیس سروسز*\n\n' +
-      '• *ڈرائیونگ لائسنس* — نیا، تجدید، ڈپلیکیٹ، لرنر\n' +
-      '• *چالان / جرمانہ ادائیگی* — آن لائن چیک اور ادا کریں\n' +
-      '• *گاڑی رجسٹریشن سرٹیفکیٹ* — ڈپلیکیٹ، منتقلی\n' +
-      '• *ٹوکن ٹیکس* — سالانہ گاڑی ٹوکن ٹیکس\n' +
-      '• *فٹنس سرٹیفکیٹ* — تجارتی گاڑیوں کے لیے لازمی\n' +
-      '• *انٹرنیشنل ڈرائیونگ پرمٹ (آئی ڈی پی)*\n\n' +
-      '📞 ٹریفک ہیلپ لائن: *1915*',
-  },
-
-  // 4 — K Electric
-  {
-    en:
-      '⚡ *K-Electric Services* (Karachi only)\n\n' +
-      '• *Bill Payment* — online via ke.com.pk or Easy Paisa / JazzCash\n' +
-      '• *New Connection* — residential and commercial\n' +
-      '• *Load Shedding Schedule* — check area-wise schedule\n' +
-      '• *Complaint* — power outage, overbilling, meter fault\n' +
-      '• *Meter Change Request*\n' +
-      '• *Net Metering* — solar energy connection\n\n' +
-      '📞 K-Electric 24/7 Helpline: *118*\n' +
-      '⚠️ This service is only available in Sindh (Karachi)',
-    ur:
-      '⚡ *کے الیکٹرک سروسز* (صرف کراچی)\n\n' +
-      '• *بل ادائیگی* — ke.com.pk یا ایزی پیسہ / جیز کیش کے ذریعے\n' +
-      '• *نیا کنیکشن* — رہائشی اور تجارتی\n' +
-      '• *لوڈ شیڈنگ شیڈول* — علاقہ وار شیڈول چیک کریں\n' +
-      '• *شکایت* — بجلی بندش، زیادہ بلنگ، میٹر خرابی\n' +
-      '• *میٹر تبدیلی درخواست*\n\n' +
-      '📞 کے الیکٹرک 24/7 ہیلپ لائن: *118*\n' +
-      '⚠️ یہ سروس صرف سندھ (کراچی) میں دستیاب ہے',
-  },
-
-  // 5 — KMC
-  {
-    en:
-      '🏙️ *KMC — Karachi Metropolitan Corporation*\n\n' +
-      '• *Birth & Death Certificate* — registration and copies\n' +
-      '• *Trade License* — new and renewal for businesses\n' +
-      '• *Building Plan Approval* — residential and commercial\n' +
-      '• *Solid Waste / Garbage Complaint*\n' +
-      '• *Road & Footpath Repair Complaint*\n' +
-      '• *Property Tax* — check and payment\n\n' +
-      '📞 KMC Helpline: *021-99251300*\n' +
-      '⚠️ This service is only available in Sindh (Karachi)',
-    ur:
-      '🏙️ *کے ایم سی — کراچی میٹروپولیٹن کارپوریشن*\n\n' +
-      '• *پیدائش اور موت کا سرٹیفکیٹ* — رجسٹریشن اور نقول\n' +
-      '• *تجارتی لائسنس* — نیا اور تجدید\n' +
-      '• *عمارت منصوبہ منظوری*\n' +
-      '• *کوڑا کرکٹ شکایت*\n' +
-      '• *سڑک اور فٹ پاتھ مرمت شکایت*\n' +
-      '• *جائیداد ٹیکس* — چیک اور ادائیگی\n\n' +
-      '📞 کے ایم سی ہیلپ لائن: *021-99251300*',
-  },
-
-  // 6 — Sui Gas
-  {
-    en:
-      '🔥 *Sui Gas Services*\n\n' +
-      '• *SSGC* (Sindh & Balochistan) — ssgc.com.pk\n' +
-      '• *SNGPL* (Punjab, KP & Federal) — sngpl.com.pk\n\n' +
-      '*Available Services:*\n' +
-      '• Bill payment and duplicate bill\n' +
-      '• Gas leakage complaint (24/7 emergency)\n' +
-      '• New connection application\n' +
-      '• Load management and pressure complaints\n' +
-      '• Meter change request\n\n' +
-      '🆘 Gas Emergency (SSGC): *119*\n' +
-      '🆘 Gas Emergency (SNGPL): *1199*',
-    ur:
-      '🔥 *سوئی گیس سروسز*\n\n' +
-      '• *ایس ایس جی سی* (سندھ و بلوچستان) — ssgc.com.pk\n' +
-      '• *ایس این جی پی ایل* (پنجاب، کے پی اور وفاقی) — sngpl.com.pk\n\n' +
-      '*دستیاب سروسز:*\n' +
-      '• بل ادائیگی اور ڈپلیکیٹ بل\n' +
-      '• گیس لیکیج شکایت (24 گھنٹے ہنگامی)\n' +
-      '• نئی کنیکشن درخواست\n' +
-      '• پریشر شکایات\n\n' +
-      '🆘 گیس ہنگامی (ایس ایس جی سی): *119*\n' +
-      '🆘 گیس ہنگامی (ایس این جی پی ایل): *1199*',
-  },
-
-  // 7 — Water Board
-  {
-    en:
-      '💧 *Water Board Services*\n\n' +
-      '• *Bill Payment* — check and pay online\n' +
-      '• *New Water Connection* — residential and commercial\n' +
-      '• *Water Shortage / No Water Complaint*\n' +
-      '• *Pipeline Leakage Complaint*\n' +
-      '• *Water Quality Complaint*\n' +
-      '• *Tanker Booking* (Karachi — KWSB)\n\n' +
-      '📞 KWSB Helpline (Karachi): *021-111-009-009*\n' +
-      '📞 WASA Punjab Helpline: *042-111-927-222*',
-    ur:
-      '💧 *واٹر بورڈ سروسز*\n\n' +
-      '• *بل ادائیگی* — آن لائن چیک اور ادائیگی\n' +
-      '• *نئی پانی کی کنیکشن* — رہائشی اور تجارتی\n' +
-      '• *پانی نہ آنے کی شکایت*\n' +
-      '• *پائپ لائن لیکیج شکایت*\n' +
-      '• *پانی کے معیار کی شکایت*\n' +
-      '• *ٹینکر بکنگ* (کراچی — کے ڈبلیو ایس بی)\n\n' +
-      '📞 کے ڈبلیو ایس بی ہیلپ لائن: *021-111-009-009*\n' +
-      '📞 واسا پنجاب ہیلپ لائن: *042-111-927-222*',
-  },
-
-  // 8 — Pakistan Bait ul Maal
-  {
-    en:
-      '🤲 *Pakistan Bait ul Maal (PBM)*\n\n' +
-      '*Assistance Programs:*\n' +
-      '• *Educational Stipends* — for destitute students (primary to matric)\n' +
-      '• *Food Support Programme* — monthly ration for deserving families\n' +
-      '• *Vocational Training* — skills development for poor youth\n' +
-      '• *Child Labour Elimination* — rehabilitation support\n' +
-      '• *Medical Assistance* — for patients unable to afford treatment\n\n' +
-      '📋 *Eligibility:* Monthly income below Rs. 45,000, no government job, no property.\n\n' +
-      '📞 PBM Helpline: *051-9246374*',
-    ur:
-      '🤲 *پاکستان بیت المال (پی بی ایم)*\n\n' +
-      '*امدادی پروگرام:*\n' +
-      '• *تعلیمی وظائف* — غریب طلباء کے لیے (پرائمری سے میٹرک)\n' +
-      '• *فوڈ سپورٹ پروگرام* — مستحق خاندانوں کے لیے ماہانہ راشن\n' +
-      '• *پیشہ وارانہ تربیت* — غریب نوجوانوں کے لیے\n' +
-      '• *بچہ مزدوری خاتمہ* — بحالی امداد\n' +
-      '• *طبی امداد* — علاج کی استطاعت نہ رکھنے والوں کے لیے\n\n' +
-      '📋 *اہلیت:* ماہانہ آمدن 45,000 روپے سے کم، کوئی سرکاری ملازمت یا جائیداد نہ ہو۔\n\n' +
-      '📞 پی بی ایم ہیلپ لائن: *051-9246374*',
-  },
-
-  // 9 — Benazir Income Support
-  {
-    en:
-      '💚 *Benazir Income Support Programme (BISP)*\n\n' +
-      '*Active Programs:*\n' +
-      '• *Kafaalat* — quarterly cash transfers for poor women (Rs. 10,500/quarter)\n' +
-      '• *Taleemi Wazaif* — education stipends for children of BISP beneficiaries\n' +
-      '• *BISP Nashonuma* — nutrition support for children under 2 years\n' +
-      '• *Graduation Programme* — livelihood support to exit poverty\n\n' +
-      '📋 *Eligibility Check:* SMS your CNIC to *8171* or visit bisp.gov.pk\n\n' +
-      '📞 BISP Helpline: *0800-26477* (toll free)\n' +
-      '⚠️ Payments made through HBL, Bank Alfalah & Post Office',
-    ur:
-      '💚 *بے نظیر انکم سپورٹ پروگرام (بی آئی ایس پی)*\n\n' +
-      '*فعال پروگرام:*\n' +
-      '• *کفالت* — غریب خواتین کے لیے سہ ماہی نقد رقم (10,500 روپے فی سہ ماہی)\n' +
-      '• *تعلیمی وظائف* — مستفیدین کے بچوں کے لیے تعلیمی وظائف\n' +
-      '• *بی آئی ایس پی نشوونما* — 2 سال سے کم بچوں کے لیے غذائیت امداد\n' +
-      '• *گریجویشن پروگرام* — غربت سے نکلنے کے لیے معاش امداد\n\n' +
-      '📋 *اہلیت چیک:* اپنا شناختی کارڈ نمبر *8171* پر SMS کریں\n\n' +
-      '📞 بی آئی ایس پی ہیلپ لائن: *0800-26477* (مفت)',
-  },
-
-  // 10 — Zakat & Ushr
-  {
-    en:
-      '☪️ *Zakat & Ushr Department*\n\n' +
-      '*Benefits Available:*\n' +
-      '• *Guzara Allowance* — monthly stipend for destitute Muslims\n' +
-      '• *Educational Stipends* — from primary to university level\n' +
-      '• *Healthcare* — medical assistance for poor patients\n' +
-      '• *Social Welfare* — support for widows, orphans, disabled persons\n' +
-      '• *Rehabilitation* — self-employment loans and skill training\n\n' +
-      '📋 *Eligibility:* Must be Muslim, Pakistani citizen, income below poverty line.\n' +
-      '📋 *Apply via:* Local Zakat Committee or district Zakat office.\n\n' +
-      '📞 Federal Zakat Helpline: *051-9204433*',
-    ur:
-      '☪️ *زکوٰۃ و عشر ڈیپارٹمنٹ*\n\n' +
-      '*دستیاب فوائد:*\n' +
-      '• *گزارہ الاؤنس* — مستحق مسلمانوں کے لیے ماہانہ وظیفہ\n' +
-      '• *تعلیمی وظائف* — پرائمری سے یونیورسٹی سطح تک\n' +
-      '• *صحت* — غریب مریضوں کے لیے طبی امداد\n' +
-      '• *سماجی بہبود* — بیوہ، یتیم، معذور افراد کے لیے\n' +
-      '• *بحالی* — خود روزگار قرضے اور ہنر تربیت\n\n' +
-      '📋 *اہلیت:* مسلمان، پاکستانی شہری، آمدن خط افلاس سے کم۔\n\n' +
-      '📞 وفاقی زکوٰۃ ہیلپ لائن: *051-9204433*',
-  },
-
-  // 11 — Immigration & Passport
-  {
-    en:
-      '✈️ *Immigration & Passport Services*\n\n' +
-      '• *New Passport* — apply online at dgip.gov.pk\n' +
-      '• *Passport Renewal* — standard (6 weeks) or urgent (2 weeks)\n' +
-      '• *Machine Readable Passport (MRP)*\n' +
-      '• *Track Passport Status* — online tracking available\n' +
-      '• *Visa on Arrival / E-Visa* — information and application\n' +
-      '• *Immigration Card (FRC)* — for foreigners\n\n' +
-      '📋 *Required documents:* CNIC, old passport (if renewal), passport photos.\n\n' +
-      '📞 Passport Helpline: *051-9204433*\n' +
-      '🌐 Online portal: dgip.gov.pk',
-    ur:
-      '✈️ *امیگریشن اینڈ پاسپورٹ سروسز*\n\n' +
-      '• *نیا پاسپورٹ* — dgip.gov.pk پر آن لائن درخواست\n' +
-      '• *پاسپورٹ تجدید* — معمول (6 ہفتے) یا ہنگامی (2 ہفتے)\n' +
-      '• *مشین ریڈایبل پاسپورٹ (ایم آر پی)*\n' +
-      '• *پاسپورٹ اسٹیٹس ٹریک کریں* — آن لائن ٹریکنگ\n' +
-      '• *ویزا آن اریول / ای ویزا* — معلومات اور درخواست\n\n' +
-      '📋 *ضروری دستاویزات:* شناختی کارڈ، پرانا پاسپورٹ، تصویریں۔\n\n' +
-      '📞 پاسپورٹ ہیلپ لائن: *051-9204433*',
-  },
-
-  // 12 — Pakistan Customs
-  {
-    en:
-      '🛃 *Pakistan Customs — FBR*\n\n' +
-      '• *Import / Export Declarations* — via WeBOC system (weboc.gov.pk)\n' +
-      '• *Customs Duty Calculator* — check applicable duty on goods\n' +
-      '• *Vehicle Import* — duty and clearance for imported vehicles\n' +
-      '• *Personal Baggage* — allowance rules for returning Pakistanis\n' +
-      '• *Smuggling / Complaint* — report illegal goods\n' +
-      '• *Authorized Economic Operator (AEO)* — for trade facilitation\n\n' +
-      '📞 FBR Helpline: *051-111-772-772*\n' +
-      '🌐 Portal: fbr.gov.pk | weboc.gov.pk',
-    ur:
-      '🛃 *پاکستان کسٹمز — ایف بی آر*\n\n' +
-      '• *امپورٹ / ایکسپورٹ ڈیکلریشن* — ویبوک سسٹم (weboc.gov.pk) کے ذریعے\n' +
-      '• *کسٹم ڈیوٹی کیلکولیٹر* — اشیاء پر لاگو ڈیوٹی چیک کریں\n' +
-      '• *گاڑی امپورٹ* — درآمد شدہ گاڑیوں کی ڈیوٹی اور کلیئرنس\n' +
-      '• *ذاتی سامان* — واپس آنے والے پاکستانیوں کے لیے قوانین\n' +
-      '• *سمگلنگ / شکایت* — غیر قانونی اشیاء کی اطلاع\n\n' +
-      '📞 ایف بی آر ہیلپ لائن: *051-111-772-772*',
-  },
+// ─── ISLAMABAD ────────────────────────────────────────────────────────────────
+const islamabad = [
+  buildMsg('🚗','Vehicle Registration','گاڑی کی رجسٹریشن','Islamabad','اسلام آباد',
+    'Pak App (Pakistan Citizen Portal)','portal.pakistan.gov.pk',
+    'پاک ایپ (پاکستان سٹیزن پورٹل)','portal.pakistan.gov.pk',
+    '• Islamabad Traffic Police Office, G-6\n• Excise & Taxation Office, G-5\n• Model Town Service Center',
+    '• اسلام آباد ٹریفک پولیس آفس، جی-6\n• ایکسائز اور ٹیکسیشن آفس، جی-5\n• ماڈل ٹاؤن سروس سینٹر',
+    "1. Open Pak App\n2. Go to 'Transport Services'\n3. Select 'Vehicle Registration'\n4. Fill required details\n5. Upload documents (CNIC, Form)\n6. Pay fee online\n7. Visit service center for verification",
+    '1. پاک ایپ کھولیں\n2. \'ٹرانسپورٹ سروسز\' پر جائیں\n3. \'گاڑی رجسٹریشن\' منتخب کریں\n4. مطلوبہ تفصیلات پُر کریں\n5. دستاویزات اپلوڈ کریں (شناختی کارڈ، فارم)\n6. آن لائن فیس ادا کریں\n7. تصدیق کے لیے مرکز جائیں'),
+  buildMsg('🏠','Property Tax','جائیداد ٹیکس','Islamabad','اسلام آباد',
+    'Pak App (Pakistan Citizen Portal)','portal.pakistan.gov.pk',
+    'پاک ایپ (پاکستان سٹیزن پورٹل)','portal.pakistan.gov.pk',
+    '• CDA Office, G-7/4\n• Facilitation Center, F-6 Markaz\n• ICT Revenue Office, G-11',
+    '• سی ڈی اے آفس، جی-7/4\n• فیسلیٹیشن سینٹر، ایف-6 مرکز\n• آئی سی ٹی ریونیو آفس، جی-11',
+    "1. Open Pak App\n2. Go to 'Tax Services'\n3. Select 'Property Tax'\n4. Enter property details\n5. View bill\n6. Pay online or visit center",
+    '1. پاک ایپ کھولیں\n2. \'ٹیکس سروسز\' پر جائیں\n3. \'جائیداد ٹیکس\' منتخب کریں\n4. جائیداد کی تفصیلات درج کریں\n5. بل دیکھیں\n6. آن لائن ادا کریں یا مرکز جائیں'),
+  buildMsg('💳','Domicile Certificate','ڈومیسائل سرٹیفکیٹ','Islamabad','اسلام آباد',
+    'Pak App (Pakistan Citizen Portal)','portal.pakistan.gov.pk',
+    'پاک ایپ (پاکستان سٹیزن پورٹل)','portal.pakistan.gov.pk',
+    '• Deputy Commissioner Office, G-11\n• ICT Administration Office, F-6\n• Sub-Division offices (Islamabad)',
+    '• ڈپٹی کمشنر آفس، جی-11\n• آئی سی ٹی انتظامیہ آفس، ایف-6\n• سب ڈویژن آفسز (اسلام آباد)',
+    "1. Open Pak App\n2. Select 'Revenue Services'\n3. Choose 'Domicile Certificate'\n4. Fill personal information\n5. Upload CNIC & proof of residence\n6. Submit application\n7. Track status in app",
+    '1. پاک ایپ کھولیں\n2. \'ریونیو سروسز\' منتخب کریں\n3. \'ڈومیسائل سرٹیفکیٹ\' چنیں\n4. ذاتی معلومات پُر کریں\n5. شناختی کارڈ اور رہائش ثبوت اپلوڈ کریں\n6. درخواست جمع کریں\n7. ایپ میں اسٹیٹس ٹریک کریں'),
+  buildMsg('📄','Birth Certificate','پیدائش سرٹیفکیٹ','Islamabad','اسلام آباد',
+    'Pak App (Pakistan Citizen Portal)','portal.pakistan.gov.pk',
+    'پاک ایپ (پاکستان سٹیزن پورٹل)','portal.pakistan.gov.pk',
+    '• Union Council / Union Administration office\n• NADRA Registration Centre\n• CDA Birth Registration Counter',
+    '• یونین کونسل / یونین انتظامیہ آفس\n• نادرا رجسٹریشن سینٹر\n• سی ڈی اے پیدائش رجسٹریشن کاؤنٹر',
+    "1. Open Pak App\n2. Go to 'Civil Registration'\n3. Select 'Birth Certificate'\n4. Enter child details & parents CNIC\n5. Upload hospital birth slip\n6. Submit application\n7. Collect from Union Council or download",
+    '1. پاک ایپ کھولیں\n2. \'سول رجسٹریشن\' پر جائیں\n3. \'پیدائش سرٹیفکیٹ\' منتخب کریں\n4. بچے کی تفصیلات اور والدین کا شناختی کارڈ درج کریں\n5. ہسپتال کی سلپ اپلوڈ کریں\n6. درخواست جمع کریں\n7. یونین کونسل سے حاصل کریں یا ڈاؤن لوڈ کریں'),
+  buildMsg('🏥','Health Services','صحت کی خدمات','Islamabad','اسلام آباد',
+    'Pak App (Pakistan Citizen Portal)','portal.pakistan.gov.pk',
+    'پاک ایپ (پاکستان سٹیزن پورٹل)','portal.pakistan.gov.pk',
+    '• PIMS Hospital, G-8 (Islamabad)\n• Polyclinic Hospital, G-6\n• Capital Hospital, G-6/2',
+    '• پمز ہسپتال، جی-8 (اسلام آباد)\n• پولی کلینک ہسپتال، جی-6\n• کیپیٹل ہسپتال، جی-6/2',
+    "1. Open Pak App\n2. Select 'Health Services'\n3. Choose hospital / service type\n4. Book appointment online\n5. Enter CNIC & contact details\n6. Confirm appointment\n7. Visit hospital at scheduled time",
+    '1. پاک ایپ کھولیں\n2. \'صحت کی خدمات\' منتخب کریں\n3. ہسپتال / خدمت کی قسم چنیں\n4. آن لائن اپوائنٹمنٹ بک کریں\n5. شناختی کارڈ اور رابطہ تفصیلات درج کریں\n6. اپوائنٹمنٹ کنفرم کریں\n7. مقررہ وقت پر ہسپتال جائیں'),
+  buildMsg('⚡','Electricity Bill','بجلی بل','Islamabad','اسلام آباد',
+    'Pak App (Pakistan Citizen Portal)','iesco.com.pk',
+    'پاک ایپ (پاکستان سٹیزن پورٹل)','iesco.com.pk',
+    '• IESCO Customer Service Center, G-7\n• IESCO Online Portal (iesco.com.pk)\n• 1-Link / JazzCash payment points',
+    '• آئیسکو کسٹمر سروس سینٹر، جی-7\n• آئیسکو آن لائن پورٹل (iesco.com.pk)\n• 1-لنک / جاز کیش پیمنٹ پوائنٹس',
+    "1. Open Pak App\n2. Go to 'Utility Services'\n3. Select 'Electricity Bill'\n4. Enter IESCO Reference Number\n5. View bill details\n6. Pay via JazzCash / EasyPaisa / Bank",
+    '1. پاک ایپ کھولیں\n2. \'یوٹیلیٹی سروسز\' پر جائیں\n3. \'بجلی بل\' منتخب کریں\n4. آئیسکو ریفرنس نمبر درج کریں\n5. بل کی تفصیلات دیکھیں\n6. جاز کیش / ایزی پیسہ / بینک سے ادا کریں'),
+  buildMsg('💧','Water Bill','پانی بل','Islamabad','اسلام آباد',
+    'Pak App (Pakistan Citizen Portal)','cda.gov.pk',
+    'پاک ایپ (پاکستان سٹیزن پورٹل)','cda.gov.pk',
+    '• CDA Water Management, I-9 Depot\n• MCI Water Supply Office\n• Online at cda.gov.pk',
+    '• سی ڈی اے واٹر مینجمنٹ، آئی-9 ڈپو\n• ایم سی آئی واٹر سپلائی آفس\n• آن لائن cda.gov.pk پر',
+    "1. Open Pak App\n2. Go to 'Utility Services'\n3. Select 'Water Bill'\n4. Enter CDA connection number\n5. View bill\n6. Pay online or at CDA office",
+    '1. پاک ایپ کھولیں\n2. \'یوٹیلیٹی سروسز\' پر جائیں\n3. \'پانی بل\' منتخب کریں\n4. سی ڈی اے کنکشن نمبر درج کریں\n5. بل دیکھیں\n6. آن لائن یا سی ڈی اے آفس میں ادا کریں'),
+  buildMsg('📋','All Services','تمام خدمات','Islamabad','اسلام آباد',
+    'Pak App (Pakistan Citizen Portal)','portal.pakistan.gov.pk',
+    'پاک ایپ (پاکستان سٹیزن پورٹل)','portal.pakistan.gov.pk',
+    '• Nearest Pak Service Center, Islamabad\n• Federal Secretariat Help Desk, Constitution Ave\n• NITB Help Desk, Shahrah-e-Soharwardi',
+    '• قریبی پاک سروس سینٹر، اسلام آباد\n• فیڈرل سیکریٹریٹ ہیلپ ڈیسک، کنسٹیٹیوشن ایو\n• این آئی ٹی بی ہیلپ ڈیسک، شاہراہ سہروردی',
+    "1. Open Pak App\n2. Browse service categories\n3. Search for required service\n4. Follow in-app instructions\n5. Submit online or visit center",
+    '1. پاک ایپ کھولیں\n2. خدمت کیٹیگریز دیکھیں\n3. مطلوبہ خدمت تلاش کریں\n4. ایپ کی ہدایات پر عمل کریں\n5. آن لائن جمع کریں یا مرکز جائیں'),
 ];
 
+// ─── PUNJAB ───────────────────────────────────────────────────────────────────
+const punjab = [
+  buildMsg('🚗','Vehicle Registration','گاڑی کی رجسٹریشن','Punjab','پنجاب',
+    'Dastarak App (Punjab Citizen Portal)','punjab.gov.pk',
+    'داسترک ایپ (پنجاب سٹیزن پورٹل)','punjab.gov.pk',
+    '• Punjab Safe Cities Authority (your city)\n• District Excise Office (your district)\n• Vehicle Registration Centers',
+    '• پنجاب سیف سٹیز اتھارٹی (آپ کا شہر)\n• ضلع ایکسائز آفس (آپ کا ضلع)\n• گاڑی رجسٹریشن مراکز',
+    "1. Open Dastarak App\n2. Select 'Transport Services'\n3. Choose 'Vehicle Registration'\n4. Enter vehicle details\n5. Upload documents (CNIC, Form)\n6. Pay registration fee\n7. Book appointment\n8. Visit center with original documents",
+    '1. داسترک ایپ کھولیں\n2. \'ٹرانسپورٹ سروسز\' منتخب کریں\n3. \'گاڑی رجسٹریشن\' چنیں\n4. گاڑی کی تفصیلات درج کریں\n5. دستاویزات اپلوڈ کریں (شناختی کارڈ، فارم)\n6. رجسٹریشن فیس ادا کریں\n7. اپوائنٹمنٹ بک کریں\n8. اصل دستاویزات کے ساتھ مرکز جائیں'),
+  buildMsg('🏠','Property Tax','جائیداد ٹیکس','Punjab','پنجاب',
+    'Dastarak App (Punjab Citizen Portal)','punjab.gov.pk',
+    'داسترک ایپ (پنجاب سٹیزن پورٹل)','punjab.gov.pk',
+    '• Punjab Revenue Authority offices\n• District Municipal Administration offices\n• Tehsil offices (your tehsil)',
+    '• پنجاب ریونیو اتھارٹی آفسز\n• ضلعی بلدیاتی انتظامیہ آفسز\n• تحصیل آفسز (آپ کی تحصیل)',
+    "1. Open Dastarak App\n2. Go to 'Revenue Services'\n3. Select 'Property Tax'\n4. Enter property details\n5. Generate bill\n6. Pay via JazzCash / EasyPaisa / Bank",
+    '1. داسترک ایپ کھولیں\n2. \'ریونیو سروسز\' پر جائیں\n3. \'جائیداد ٹیکس\' منتخب کریں\n4. جائیداد کی تفصیلات درج کریں\n5. بل جنریٹ کریں\n6. جاز کیش / ایزی پیسہ / بینک سے ادا کریں'),
+  buildMsg('💳','Domicile Certificate','ڈومیسائل سرٹیفکیٹ','Punjab','پنجاب',
+    'Dastarak App (Punjab Citizen Portal)','punjab.gov.pk',
+    'داسترک ایپ (پنجاب سٹیزن پورٹل)','punjab.gov.pk',
+    '• Deputy Commissioner Office (your district)\n• Assistant Commissioner Office (your tehsil)\n• District Revenue Office',
+    '• ڈپٹی کمشنر آفس (آپ کا ضلع)\n• اسسٹنٹ کمشنر آفس (آپ کی تحصیل)\n• ضلعی ریونیو آفس',
+    "1. Open Dastarak App\n2. Select 'Revenue Services'\n3. Choose 'Domicile Certificate'\n4. Enter personal information & CNIC\n5. Upload residence proof\n6. Submit application\n7. Collect from DC Office or track online",
+    '1. داسترک ایپ کھولیں\n2. \'ریونیو سروسز\' منتخب کریں\n3. \'ڈومیسائل سرٹیفکیٹ\' چنیں\n4. ذاتی معلومات اور شناختی کارڈ درج کریں\n5. رہائش ثبوت اپلوڈ کریں\n6. درخواست جمع کریں\n7. ڈی سی آفس سے حاصل کریں یا آن لائن ٹریک کریں'),
+  buildMsg('📄','Birth Certificate','پیدائش سرٹیفکیٹ','Punjab','پنجاب',
+    'Dastarak App (Punjab Citizen Portal)','punjab.gov.pk',
+    'داسترک ایپ (پنجاب سٹیزن پورٹل)','punjab.gov.pk',
+    '• Union Council (your area)\n• NADRA Registration Centre\n• District Health Authority office',
+    '• یونین کونسل (آپ کا علاقہ)\n• نادرا رجسٹریشن سینٹر\n• ضلعی صحت اتھارٹی آفس',
+    "1. Open Dastarak App\n2. Go to 'Civil Registration'\n3. Select 'Birth Certificate'\n4. Enter child & parent details\n5. Upload hospital birth form (B-Form)\n6. Submit application\n7. Collect from Union Council",
+    '1. داسترک ایپ کھولیں\n2. \'سول رجسٹریشن\' پر جائیں\n3. \'پیدائش سرٹیفکیٹ\' منتخب کریں\n4. بچے اور والدین کی تفصیلات درج کریں\n5. ہسپتال کا بی-فارم اپلوڈ کریں\n6. درخواست جمع کریں\n7. یونین کونسل سے حاصل کریں'),
+  buildMsg('🏥','Health Services','صحت کی خدمات','Punjab','پنجاب',
+    'Dastarak App (Punjab Citizen Portal)','punjab.gov.pk',
+    'داسترک ایپ (پنجاب سٹیزن پورٹل)','punjab.gov.pk',
+    '• Lahore General Hospital (Lahore)\n• District Headquarters Hospital (your district)\n• Punjab Health Authority Clinics',
+    '• لاہور جنرل ہسپتال (لاہور)\n• ضلع ہیڈکوارٹر ہسپتال (آپ کا ضلع)\n• پنجاب ہیلتھ اتھارٹی کلینکس',
+    "1. Open Dastarak App\n2. Select 'Health Services'\n3. Choose service / hospital\n4. Book appointment online\n5. Enter CNIC & contact info\n6. Confirm and receive SMS confirmation\n7. Visit hospital at scheduled time",
+    '1. داسترک ایپ کھولیں\n2. \'صحت کی خدمات\' منتخب کریں\n3. خدمت / ہسپتال چنیں\n4. آن لائن اپوائنٹمنٹ بک کریں\n5. شناختی کارڈ اور رابطہ معلومات درج کریں\n6. کنفرم کریں اور SMS تصدیق حاصل کریں\n7. مقررہ وقت پر ہسپتال جائیں'),
+  buildMsg('⚡','Electricity Bill','بجلی بل','Punjab','پنجاب',
+    'Dastarak App (Punjab Citizen Portal)','punjab.gov.pk',
+    'داسترک ایپ (پنجاب سٹیزن پورٹل)','punjab.gov.pk',
+    '• LESCO Customer Center (Lahore)\n• MEPCO, GEPCO, FESCO offices (your area)\n• 1-Link / JazzCash agents',
+    '• لیسکو کسٹمر سینٹر (لاہور)\n• میپکو، جیپکو، فیسکو آفسز (آپ کا علاقہ)\n• 1-لنک / جاز کیش ایجنٹس',
+    "1. Open Dastarak App\n2. Go to 'Utility Services'\n3. Select 'Electricity Bill'\n4. Enter DISCO Reference Number\n5. View bill\n6. Pay via JazzCash / EasyPaisa / Bank",
+    '1. داسترک ایپ کھولیں\n2. \'یوٹیلیٹی سروسز\' پر جائیں\n3. \'بجلی بل\' منتخب کریں\n4. ڈسکو ریفرنس نمبر درج کریں\n5. بل دیکھیں\n6. جاز کیش / ایزی پیسہ / بینک سے ادا کریں'),
+  buildMsg('💧','Water Bill','پانی بل','Punjab','پنجاب',
+    'Dastarak App (Punjab Citizen Portal)','punjab.gov.pk',
+    'داسترک ایپ (پنجاب سٹیزن پورٹل)','punjab.gov.pk',
+    '• WASA Customer Service (Lahore / your city)\n• Punjab Municipal Services offices\n• Online at punjab.gov.pk',
+    '• واسہ کسٹمر سروس (لاہور / آپ کا شہر)\n• پنجاب میونسپل سروسز آفسز\n• آن لائن punjab.gov.pk پر',
+    "1. Open Dastarak App\n2. Select 'Utility Services'\n3. Choose 'Water Bill'\n4. Enter WASA consumer number\n5. View current bill\n6. Pay online or at WASA office",
+    '1. داسترک ایپ کھولیں\n2. \'یوٹیلیٹی سروسز\' منتخب کریں\n3. \'پانی بل\' چنیں\n4. واسہ کنزیومر نمبر درج کریں\n5. موجودہ بل دیکھیں\n6. آن لائن یا واسہ آفس میں ادا کریں'),
+  buildMsg('📋','All Services','تمام خدمات','Punjab','پنجاب',
+    'Dastarak App (Punjab Citizen Portal)','punjab.gov.pk',
+    'داسترک ایپ (پنجاب سٹیزن پورٹل)','punjab.gov.pk',
+    '• Nearest Dastarak Service Center (your district)\n• Punjab Facilitation Center (Lahore)\n• District Administration Complex',
+    '• قریبی داسترک سروس سینٹر (آپ کا ضلع)\n• پنجاب فیسلیٹیشن سینٹر (لاہور)\n• ضلعی انتظامیہ کمپلیکس',
+    "1. Open Dastarak App\n2. Browse service categories\n3. Select your required service\n4. Follow instructions\n5. Submit application online\n6. Track status in the app",
+    '1. داسترک ایپ کھولیں\n2. خدمت کیٹیگریز دیکھیں\n3. مطلوبہ خدمت منتخب کریں\n4. ہدایات پر عمل کریں\n5. آن لائن درخواست جمع کریں\n6. ایپ میں اسٹیٹس ٹریک کریں'),
+];
+
+// ─── KPK ──────────────────────────────────────────────────────────────────────
+const kpk = [
+  buildMsg('🚗','Vehicle Registration','گاڑی کی رجسٹریشن','KPK','خیبر پختونخواہ',
+    'Dastarak App (KPK Citizen Portal)','kp.gov.pk',
+    'داسترک ایپ (کے پی کے سٹیزن پورٹل)','kp.gov.pk',
+    '• KPK Excise & Taxation Office (your district)\n• District Motor Vehicle Registration office\n• Traffic Police Headquarters, Peshawar',
+    '• کے پی کے ایکسائز اور ٹیکسیشن آفس (آپ کا ضلع)\n• ضلعی موٹر وہیکل رجسٹریشن آفس\n• ٹریفک پولیس ہیڈکوارٹر، پشاور',
+    "1. Open Dastarak App\n2. Navigate to 'Vehicle Services'\n3. Select 'Registration'\n4. Fill vehicle information\n5. Upload required documents\n6. Pay registration charges\n7. Visit office for physical verification",
+    '1. داسترک ایپ کھولیں\n2. \'وہیکل سروسز\' پر جائیں\n3. \'رجسٹریشن\' منتخب کریں\n4. گاڑی کی معلومات پُر کریں\n5. مطلوبہ دستاویزات اپلوڈ کریں\n6. رجسٹریشن چارجز ادا کریں\n7. جسمانی تصدیق کے لیے آفس جائیں'),
+  buildMsg('🏠','Property Tax','جائیداد ٹیکس','KPK','خیبر پختونخواہ',
+    'Dastarak App (KPK Citizen Portal)','kp.gov.pk',
+    'داسترک ایپ (کے پی کے سٹیزن پورٹل)','kp.gov.pk',
+    '• KPK Revenue Authority (KPRA) offices\n• Tehsil Municipal Administration offices\n• District Administration offices',
+    '• کے پی کے ریونیو اتھارٹی (کے پی آر اے) آفسز\n• تحصیل میونسپل انتظامیہ آفسز\n• ضلعی انتظامیہ آفسز',
+    "1. Open Dastarak App\n2. Access 'Tax Services'\n3. Select 'Property Tax'\n4. Input property information\n5. Calculate tax amount\n6. Make payment online",
+    '1. داسترک ایپ کھولیں\n2. \'ٹیکس سروسز\' تک رسائی حاصل کریں\n3. \'جائیداد ٹیکس\' منتخب کریں\n4. جائیداد کی معلومات درج کریں\n5. ٹیکس کی رقم حساب کریں\n6. آن لائن ادائیگی کریں'),
+  buildMsg('💳','Domicile Certificate','ڈومیسائل سرٹیفکیٹ','KPK','خیبر پختونخواہ',
+    'Dastarak App (KPK Citizen Portal)','kp.gov.pk',
+    'داسترک ایپ (کے پی کے سٹیزن پورٹل)','kp.gov.pk',
+    '• Deputy Commissioner Office (your district)\n• Assistant Commissioner (your sub-division)\n• KPK Revenue Department',
+    '• ڈپٹی کمشنر آفس (آپ کا ضلع)\n• اسسٹنٹ کمشنر (آپ کا سب ڈویژن)\n• کے پی کے ریونیو ڈیپارٹمنٹ',
+    "1. Open Dastarak App\n2. Select 'Revenue Services'\n3. Choose 'Domicile Certificate'\n4. Enter personal details & CNIC\n5. Upload supporting documents\n6. Submit application\n7. Track in app; collect from DC Office",
+    '1. داسترک ایپ کھولیں\n2. \'ریونیو سروسز\' منتخب کریں\n3. \'ڈومیسائل سرٹیفکیٹ\' چنیں\n4. ذاتی تفصیلات اور شناختی کارڈ درج کریں\n5. معاون دستاویزات اپلوڈ کریں\n6. درخواست جمع کریں\n7. ایپ میں ٹریک کریں؛ ڈی سی آفس سے حاصل کریں'),
+  buildMsg('📄','Birth Certificate','پیدائش سرٹیفکیٹ','KPK','خیبر پختونخواہ',
+    'Dastarak App (KPK Citizen Portal)','kp.gov.pk',
+    'داسترک ایپ (کے پی کے سٹیزن پورٹل)','kp.gov.pk',
+    '• Union Council (your area)\n• NADRA Registration Centre (Peshawar / district)\n• KPK Local Government offices',
+    '• یونین کونسل (آپ کا علاقہ)\n• نادرا رجسٹریشن سینٹر (پشاور / ضلع)\n• کے پی کے لوکل گورنمنٹ آفسز',
+    "1. Open Dastarak App\n2. Go to 'Civil Registration'\n3. Select 'Birth Certificate'\n4. Enter child & parent details\n5. Upload hospital birth slip / B-Form\n6. Submit application\n7. Collect from Union Council or download",
+    '1. داسترک ایپ کھولیں\n2. \'سول رجسٹریشن\' پر جائیں\n3. \'پیدائش سرٹیفکیٹ\' منتخب کریں\n4. بچے اور والدین کی تفصیلات درج کریں\n5. ہسپتال کی سلپ / بی-فارم اپلوڈ کریں\n6. درخواست جمع کریں\n7. یونین کونسل سے حاصل کریں یا ڈاؤن لوڈ کریں'),
+  buildMsg('🏥','Health Services','صحت کی خدمات','KPK','خیبر پختونخواہ',
+    'Dastarak App (KPK Citizen Portal)','kp.gov.pk',
+    'داسترک ایپ (کے پی کے سٹیزن پورٹل)','kp.gov.pk',
+    '• Khyber Teaching Hospital, Peshawar\n• District Headquarters Hospital (your district)\n• KPK Health Department Clinics',
+    '• خیبر ٹیچنگ ہسپتال، پشاور\n• ضلع ہیڈکوارٹر ہسپتال (آپ کا ضلع)\n• کے پی کے محکمہ صحت کلینکس',
+    "1. Open Dastarak App\n2. Select 'Health Services'\n3. Choose hospital / type of service\n4. Book appointment\n5. Enter CNIC & contact information\n6. Receive SMS confirmation\n7. Visit at scheduled time",
+    '1. داسترک ایپ کھولیں\n2. \'صحت کی خدمات\' منتخب کریں\n3. ہسپتال / خدمت کی قسم چنیں\n4. اپوائنٹمنٹ بک کریں\n5. شناختی کارڈ اور رابطہ معلومات درج کریں\n6. SMS تصدیق حاصل کریں\n7. مقررہ وقت پر جائیں'),
+  buildMsg('⚡','Electricity Bill','بجلی بل','KPK','خیبر پختونخواہ',
+    'Dastarak App (KPK Citizen Portal)','kp.gov.pk',
+    'داسترک ایپ (کے پی کے سٹیزن پورٹل)','kp.gov.pk',
+    '• PESCO Customer Service Center (Peshawar)\n• PESCO District offices (your area)\n• EasyPaisa / JazzCash agents',
+    '• پیسکو کسٹمر سروس سینٹر (پشاور)\n• پیسکو ضلعی آفسز (آپ کا علاقہ)\n• ایزی پیسہ / جاز کیش ایجنٹس',
+    "1. Open Dastarak App\n2. Go to 'Utility Services'\n3. Select 'Electricity Bill'\n4. Enter PESCO Reference Number\n5. View bill amount\n6. Pay via EasyPaisa / JazzCash / Bank",
+    '1. داسترک ایپ کھولیں\n2. \'یوٹیلیٹی سروسز\' پر جائیں\n3. \'بجلی بل\' منتخب کریں\n4. پیسکو ریفرنس نمبر درج کریں\n5. بل کی رقم دیکھیں\n6. ایزی پیسہ / جاز کیش / بینک سے ادا کریں'),
+  buildMsg('💧','Water Bill','پانی بل','KPK','خیبر پختونخواہ',
+    'Dastarak App (KPK Citizen Portal)','kp.gov.pk',
+    'داسترک ایپ (کے پی کے سٹیزن پورٹل)','kp.gov.pk',
+    '• WSSP Customer Service Center (Peshawar)\n• Tehsil Municipal Administration offices\n• Online at kp.gov.pk',
+    '• ڈبلیو ایس ایس پی کسٹمر سروس سینٹر (پشاور)\n• تحصیل میونسپل انتظامیہ آفسز\n• آن لائن kp.gov.pk پر',
+    "1. Open Dastarak App\n2. Select 'Utility Services'\n3. Choose 'Water Bill'\n4. Enter WSSP consumer number\n5. View current bill\n6. Pay online or at WSSP office",
+    '1. داسترک ایپ کھولیں\n2. \'یوٹیلیٹی سروسز\' منتخب کریں\n3. \'پانی بل\' چنیں\n4. ڈبلیو ایس ایس پی کنزیومر نمبر درج کریں\n5. موجودہ بل دیکھیں\n6. آن لائن یا ڈبلیو ایس ایس پی آفس میں ادا کریں'),
+  buildMsg('📋','All Services','تمام خدمات','KPK','خیبر پختونخواہ',
+    'Dastarak App (KPK Citizen Portal)','kp.gov.pk',
+    'داسترک ایپ (کے پی کے سٹیزن پورٹل)','kp.gov.pk',
+    '• Nearest Dastarak Service Center (KPK)\n• KPK IT Board, Peshawar\n• District Administration Complex',
+    '• قریبی داسترک سروس سینٹر (کے پی کے)\n• کے پی کے آئی ٹی بورڈ، پشاور\n• ضلعی انتظامیہ کمپلیکس',
+    "1. Open Dastarak App\n2. Search for service\n3. Complete online form\n4. Track application status\n5. Visit center if physical presence required",
+    '1. داسترک ایپ کھولیں\n2. خدمت تلاش کریں\n3. آن لائن فارم مکمل کریں\n4. درخواست کی اسٹیٹس ٹریک کریں\n5. جسمانی حاضری ضروری ہو تو مرکز جائیں'),
+];
+
+const detailsMap = { islamabad, punjab, kpk };
+
 /**
- * Returns the detail string for a given department index and language.
- * @param {number} deptIndex  - 0 to 12
- * @param {string} lang       - 'en' or 'ur'
- * @returns {string|null}
+ * Returns the guidance string for a given location + service.
+ * @param {string} locationKey  - 'islamabad' | 'punjab' | 'kpk'
+ * @param {number} serviceIndex - 0–7
+ * @param {string} lang         - 'en' | 'ur'
  */
-function getDeptDetails(deptIndex, lang = 'en') {
-  const entry = deptDetails[deptIndex];
+function getServiceDetail(locationKey, serviceIndex, lang = 'en') {
+  const loc = detailsMap[locationKey];
+  if (!loc) return null;
+  const entry = loc[serviceIndex];
   if (!entry) return null;
   return entry[lang] || entry.en;
 }
 
-module.exports = { getDeptDetails };
+// Legacy alias (was getDeptDetails)
+function getDeptDetails(deptIndex, lang = 'en') {
+  return getServiceDetail('islamabad', deptIndex, lang);
+}
+
+module.exports = { getServiceDetail, getDeptDetails };
