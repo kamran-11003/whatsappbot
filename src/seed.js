@@ -13,14 +13,14 @@ const deptDetails = [
       '• Complaints are tracked through the provincial grievance portals.\n' +
       '• Keep your complaint reference number handy.\n' +
       '• Average response time: 3–7 working days.\n\n' +
-      '📞 Governor House Helpline: *111-000-722*',
+      '📞 NITB Helpline: *111-000-722*',
     ur:
       '📌 *شکایت کیسے دیکھیں / درج کریں*\n\n' +
       '• آپ موجودہ شکایت کی صورتحال چیک کر سکتے ہیں یا نئی درج کر سکتے ہیں۔\n' +
       '• شکایات صوبائی گریوانس پورٹلز کے ذریعے ٹریک کی جاتی ہیں۔\n' +
       '• اپنا شکایت حوالہ نمبر تیار رکھیں۔\n' +
       '• اوسط جوابی وقت: 3 سے 7 کاری دن۔\n\n' +
-      '📞 گورنر ہاؤس ہیلپ لائن: *111-000-722*',
+      '📞 NITB ہیلپ لائن: *111-000-722*',
   },
 
   // 1 — NADRA

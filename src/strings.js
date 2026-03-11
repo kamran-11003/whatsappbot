@@ -2,16 +2,16 @@
 
 const strings = {
   askLang:
-    `👋 *Welcome to Governor House Info System!*\n` +
-    `*گورنر ہاؤس انفارمیشن سسٹم میں خوش آمدید!*\n\n` +
+    `السلام علیکم! Welcome to NITB Citizen Services Guide 🇵🇰\n\n` +
+    `I will help you find the right government app and service center for your needs.\n\n` +
     `Please select your language / براہ کرم زبان منتخب کریں:\n\n` +
     `1️⃣  English\n` +
     `2️⃣  اردو (Urdu)`,
 
   en: {
     askCnic:
-      `👋 *Welcome to the Governor House Info System!*\n\n` +
-      `To get started, please enter your *CNIC number* (13 digits, no dashes).\n\n` +
+      `👋 *Welcome to NITB Citizen Services Guide!*\n\n` +
+      `Please enter your *CNIC number* (e.g., 12345-1234567-1 or 13 digits without dashes).\n\n` +
       `_Example: 4210112345671_`,
 
     invalidCnic:
@@ -39,7 +39,7 @@ const strings = {
       `You can now access all government services. 👇`,
 
     menu:
-      `🏛️ *Governor House Info System*\n\n` +
+      `🏛️ *NITB Citizen Services Guide*\n\n` +
       `Please type the *option number* for your desired service:\n\n` +
       `0️⃣  View Complaint\n` +
       `1️⃣  NADRA\n` +
@@ -92,14 +92,22 @@ const strings = {
     invalidOption:
       `❌ Invalid option. Please type a number from the menu.\n\nType *menu* to see the options again.`,
 
+    settingsMenu: `⚙️ *Settings*\n\nWhat would you like to do?`,
+
+    askLocationUpdate:
+      `📍 Please enter your *city or area*:\n\n_Example: Karachi, Lahore, Islamabad_`,
+
+    locationSaved: (loc) =>
+      `✅ Location updated to *${loc}*.\n\nType *menu* to continue.`,
+
     goodbye:
-      `Thank you for using the Governor House Info System.\nType *menu* anytime to start again.`,
+      `Thank you for using NITB Citizen Services Guide.\nType *menu* anytime to start again.`,
   },
 
   ur: {
     askCnic:
-      `👋 *گورنر ہاؤس انفارمیشن سسٹم میں خوش آمدید!*\n\n` +
-      `شروع کرنے کے لیے اپنا *شناختی کارڈ نمبر* (13 ہندسے، بغیر ڈیش) درج کریں۔\n\n` +
+      `👋 *NITB سٹیزن سروسز گائیڈ میں خوش آمدید!*\n\n` +
+      `براہ کرم اپنا *شناختی کارڈ نمبر* درج کریں (مثال: 12345-1234567-1 یا 13 ہندسے بغیر ڈیش)۔\n\n` +
       `_مثال: 4210112345671_`,
 
     invalidCnic:
@@ -127,7 +135,7 @@ const strings = {
       `اب آپ تمام سرکاری خدمات تک رسائی حاصل کر سکتے ہیں۔ 👇`,
 
     menu:
-      `🏛️ *گورنر ہاؤس انفارمیشن سسٹم*\n\n` +
+      `🏛️ *NITB سٹیزن سروسز گائیڈ*\n\n` +
       `اپنی مطلوبہ سروس کے لیے *نمبر* ٹائپ کریں:\n\n` +
       `0️⃣  شکایت دیکھیں\n` +
       `1️⃣  نادرا\n` +
@@ -180,8 +188,16 @@ const strings = {
     invalidOption:
       `❌ غلط آپشن۔ براہ کرم مینو سے نمبر ٹائپ کریں۔\n\n*menu* ٹائپ کریں۔`,
 
+    settingsMenu: `⚙️ *ترتیبات*\n\nکیا کرنا چاہتے ہیں؟`,
+
+    askLocationUpdate:
+      `📍 اپنا *شہر یا علاقہ* درج کریں:\n\n_مثال: کراچی، لاہور، اسلام آباد_`,
+
+    locationSaved: (loc) =>
+      `✅ مقام *${loc}* محفوظ ہو گیا۔\n\n*menu* ٹائپ کریں۔`,
+
     goodbye:
-      `گورنر ہاؤس انفارمیشن سسٹم استعمال کرنے کا شکریہ۔\nدوبارہ شروع کرنے کے لیے *menu* ٹائپ کریں۔`,
+      `NITB سٹیزن سروسز گائیڈ استعمال کرنے کا شکریہ۔\nدوبارہ شروع کرنے کے لیے *menu* ٹائپ کریں۔`,
   },
 };
 

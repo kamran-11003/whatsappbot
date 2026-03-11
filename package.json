@@ -1,7 +1,7 @@
 {
   "name": "governor-house-whatsapp-bot",
   "version": "1.0.0",
-  "description": "Governor House WhatsApp Citizen Services Bot — bilingual (English / Urdu)",
+  "description": "NITB WhatsApp Citizen Services Guide — bilingual (English / Urdu)",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
