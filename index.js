@@ -8,6 +8,24 @@ const { sendMessage } = require('./src/whatsapp');
 const app = express();
 app.use(express.json());
 
+// ─── Homepage ─────────────────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.send(`
+    <html><head><meta charset="utf-8"><title>Governor House Info System</title>
+    <style>body{font-family:sans-serif;max-width:700px;margin:60px auto;padding:0 20px;color:#333}
+    h1{color:#1a5276}p{line-height:1.7}.badge{display:inline-block;background:#27ae60;color:#fff;padding:6px 14px;border-radius:4px;font-size:14px}</style>
+    </head><body>
+      <h1>🏛️ Governor House Info System</h1>
+      <p class="badge">✅ Service Online</p>
+      <p>This is the official WhatsApp chatbot for Governor House citizen services. It provides information about government departments including NADRA, Police, K-Electric, Sui Gas, Water Board, Benazir Income Support, and more.</p>
+      <p>The bot supports both <strong>English</strong> and <strong>اردو (Urdu)</strong>.</p>
+      <h2>Contact</h2>
+      <p>For queries, contact Governor House through official channels.</p>
+      <p><a href="/privacy">Privacy Policy</a> &nbsp;|&nbsp; <a href="/terms">Terms of Service</a></p>
+    </body></html>
+  `);
+});
+
 // ─── Webhook Verification (Meta requires this on first setup) ────────────────
 app.get('/webhook', (req, res) => {
   const mode      = req.query['hub.mode'];
