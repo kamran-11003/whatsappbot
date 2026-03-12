@@ -32,15 +32,13 @@ function buildMsg(emoji, nameEn, nameUr, locEn, locUr, appEn, webEn, appUr, webU
       `✅ For your service "*${emoji} ${nameEn}*" in *${locEn}*, please use:\n\n` +
       `📱 *${appEn}*\n\n` +
       `🔹 Download from:\n• Google Play Store\n• Apple App Store\n\n` +
-      `🔹 Alternative: Visit ${webEn}\n\n` +
-      `📍 *Service Centers:*\n${cenEn}\n\n` +
+      `🔹 Website: ${webEn}\n\n` +
       `📝 *Steps:*\n${stEn}` + FOOTER_EN,
     ur:
       `✅ *${locUr}* میں آپ کی خدمت "*${emoji} ${nameUr}*" کے لیے:\n\n` +
       `📱 *${appUr}*\n\n` +
       `🔹 ڈاؤن لوڈ کریں:\n• گوگل پلے اسٹور\n• ایپل ایپ اسٹور\n\n` +
-      `🔹 متبادل: ${webUr} وزٹ کریں\n\n` +
-      `📍 *خدمت مراکز:*\n${cenUr}\n\n` +
+      `🔹 ویب سائٹ: ${webUr}\n\n` +
       `📝 *اقدامات:*\n${stUr}` + FOOTER_UR,
   };
 }
