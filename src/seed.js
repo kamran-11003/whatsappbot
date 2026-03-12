@@ -6,25 +6,8 @@
 //   3=Birth Certificate     4=Health Services    5=Electricity Bill
 //   6=Water Bill            7=All Services
 
-const FOOTER_EN =
-  '\n\n📞 *Need help?*\n' +
-  '• NITB Helpline: *051-111-648-2*\n' +
-  '• SMS: *8500*\n' +
-  '• Email: info@nitb.gov.pk\n\n' +
-  '⏰ *Service Centers Hours:*\n' +
-  'Monday – Friday: 9:00 AM – 5:00 PM\n' +
-  'Saturday: 9:00 AM – 2:00 PM\n\n' +
-  '💡 *Tip:* Keep your CNIC and relevant documents ready!';
-
-const FOOTER_UR =
-  '\n\n📞 *مدد کی ضرورت؟*\n' +
-  '• این آئی ٹی بی ہیلپ لائن: *051-111-648-2*\n' +
-  '• ایس ایم ایس: *8500*\n' +
-  '• ای میل: info@nitb.gov.pk\n\n' +
-  '⏰ *مراکز کے اوقات:*\n' +
-  'پیر تا جمعہ: صبح 9:00 – شام 5:00\n' +
-  'ہفتہ: صبح 9:00 – دوپہر 2:00\n\n' +
-  '💡 *ٹِپ:* اپنا شناختی کارڈ اور متعلقہ دستاویزات تیار رکھیں!';
+const FOOTER_EN = '\n\n💡 *Tip:* Keep your CNIC and relevant documents ready!';
+const FOOTER_UR = '\n\n💡 *ٹِپ:* اپنا شناختی کارڈ اور متعلقہ دستاویزات تیار رکھیں!';
 
 function buildMsg(emoji, nameEn, nameUr, locEn, locUr, appEn, webEn, appUr, webUr, cenEn, cenUr, stEn, stUr) {
   return {
@@ -32,13 +15,11 @@ function buildMsg(emoji, nameEn, nameUr, locEn, locUr, appEn, webEn, appUr, webU
       `✅ For your service "*${emoji} ${nameEn}*" in *${locEn}*, please use:\n\n` +
       `📱 *${appEn}*\n\n` +
       `🔹 Download from:\n• Google Play Store\n• Apple App Store\n\n` +
-      `🔹 Website: ${webEn}\n\n` +
-      `📝 *Steps:*\n${stEn}` + FOOTER_EN,
+      `� *Steps:*\n${stEn}` + FOOTER_EN,
     ur:
       `✅ *${locUr}* میں آپ کی خدمت "*${emoji} ${nameUr}*" کے لیے:\n\n` +
       `📱 *${appUr}*\n\n` +
       `🔹 ڈاؤن لوڈ کریں:\n• گوگل پلے اسٹور\n• ایپل ایپ اسٹور\n\n` +
-      `🔹 ویب سائٹ: ${webUr}\n\n` +
       `📝 *اقدامات:*\n${stUr}` + FOOTER_UR,
   };
 }
