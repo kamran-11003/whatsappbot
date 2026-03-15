@@ -1,13 +1,13 @@
 // ─── Service Configuration ────────────────────────────────────────────────────
-// New flow: Location (3) → Service (8)
-// Locations: islamabad | punjab | kpk
+// New flow: Location (4) → Service (8)
+// Locations: islamabad | punjab | kpk | sindh
 // Services:  0=Vehicle Registration, 1=Property Tax, 2=Domicile Certificate,
 //            3=Birth Certificate, 4=Health Services, 5=Electricity Bill,
 //            6=Water Bill, 7=All Services
 
-const LOCATIONS    = ['Islamabad', 'Punjab', 'Khyber Pakhtunkhwa (KPK)'];
-const LOCATIONS_UR = ['اسلام آباد', 'پنجاب', 'خیبر پختونخواہ'];
-const LOCATION_KEYS = ['islamabad', 'punjab', 'kpk'];
+const LOCATIONS    = ['Islamabad', 'Punjab', 'Khyber Pakhtunkhwa (KPK)', 'Sindh'];
+const LOCATIONS_UR = ['اسلام آباد', 'پنجاب', 'خیبر پختونخواہ', 'سندھ'];
+const LOCATION_KEYS = ['islamabad', 'punjab', 'kpk', 'sindh'];
 
 const SERVICES = [
   '🚗 Vehicle Registration',    // 0
@@ -122,7 +122,7 @@ const services = {
   },
 };
 
-const LOCATION_KEY_MAP = { '1': 'islamabad', '2': 'punjab', '3': 'kpk' };
+const LOCATION_KEY_MAP = { '1': 'islamabad', '2': 'punjab', '3': 'kpk', '4': 'sindh' };
 
 module.exports = {
   LOCATIONS, LOCATIONS_UR, LOCATION_KEYS, LOCATION_KEY_MAP,

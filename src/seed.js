@@ -1,13 +1,13 @@
 // ─── Service Detail Seed Data ─────────────────────────────────────────────────
 // Structure: details[locationKey][serviceIndex] = { en, ur }
-// locationKey: 'islamabad' | 'punjab' | 'kpk'
+// locationKey: 'islamabad' | 'punjab' | 'kpk' | 'sindh'
 // serviceIndex: 0–7 matching SERVICES array in services.js
 //   0=Vehicle Registration  1=Property Tax       2=Domicile Certificate
 //   3=Birth Certificate     4=Health Services    5=Electricity Bill
 //   6=Water Bill            7=All Services
 
-const FOOTER_EN = '\n\n💡 *Tip:* Keep your CNIC and relevant documents ready!';
-const FOOTER_UR = '\n\n💡 *ٹِپ:* اپنا شناختی کارڈ اور متعلقہ دستاویزات تیار رکھیں!';
+const FOOTER_EN = '\n\n💡 *Tip:* Keep your relevant documents ready!';
+const FOOTER_UR = '\n\n💡 *ٹِپ:* اپنی متعلقہ دستاویزات تیار رکھیں!';
 
 function buildMsg(emoji, nameEn, nameUr, locEn, locUr, appEn, webEn, appUr, webUr, cenEn, cenUr, stEn, stUr) {
   return {
@@ -15,13 +15,26 @@ function buildMsg(emoji, nameEn, nameUr, locEn, locUr, appEn, webEn, appUr, webU
       `✅ For your service "*${emoji} ${nameEn}*" in *${locEn}*, please use:\n\n` +
       `📱 *${appEn}*\n\n` +
       `🔹 Download from:\n• Google Play Store\n• Apple App Store\n\n` +
-      `� *Steps:*\n${stEn}` + FOOTER_EN,
+      `📝 *Steps:*\n${stEn}` + FOOTER_EN,
     ur:
       `✅ *${locUr}* میں آپ کی خدمت "*${emoji} ${nameUr}*" کے لیے:\n\n` +
       `📱 *${appUr}*\n\n` +
       `🔹 ڈاؤن لوڈ کریں:\n• گوگل پلے اسٹور\n• ایپل ایپ اسٹور\n\n` +
       `📝 *اقدامات:*\n${stUr}` + FOOTER_UR,
   };
+}
+
+function cloneForSindh(entries) {
+  return entries.map((entry) => ({
+    en: entry.en
+      .replaceAll('*Punjab*', '*Sindh*')
+      .replaceAll('Punjab Citizen Portal', 'Sindh Citizen Portal')
+      .replaceAll('punjab.gov.pk', 'sindh.gov.pk'),
+    ur: entry.ur
+      .replaceAll('*پنجاب*', '*سندھ*')
+      .replaceAll('پنجاب سٹیزن پورٹل', 'سندھ سٹیزن پورٹل')
+      .replaceAll('punjab.gov.pk', 'sindh.gov.pk'),
+  }));
 }
 
 // ─── ISLAMABAD ────────────────────────────────────────────────────────────────
@@ -204,7 +217,9 @@ const kpk = [
     '1. داسترک ایپ کھولیں\n2. خدمت تلاش کریں\n3. آن لائن فارم مکمل کریں\n4. درخواست کی اسٹیٹس ٹریک کریں\n5. جسمانی حاضری ضروری ہو تو مرکز جائیں'),
 ];
 
-const detailsMap = { islamabad, punjab, kpk };
+  const sindh = cloneForSindh(punjab);
+
+  const detailsMap = { islamabad, punjab, kpk, sindh };
 
 /**
  * Returns the guidance string for a given location + service.

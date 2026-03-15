@@ -100,7 +100,7 @@ app.get('/privacy', (req, res) => {
       <h1>Privacy Policy</h1>
       <p>This WhatsApp bot is operated by NITB (National Information Technology Board) and is used to provide citizen services.</p>
       <h2>Data We Collect</h2>
-      <p>We collect your CNIC number, phone number, and location (city/area) solely to process your service request.</p>
+      <p>We collect your language preference, selected location, and selected service solely to respond to your request.</p>
       <h2>How We Use Your Data</h2>
       <p>Your data is used only to respond to your service request within this WhatsApp conversation. We do not share your data with third parties.</p>
       <h2>Data Retention</h2>
