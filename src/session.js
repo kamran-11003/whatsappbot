@@ -1,18 +1,23 @@
 // ─── Session Store ────────────────────────────────────────────────────────────
 // Steps in order:
-//   'lang_select' → waiting for initial language choice (1=EN, 2=UR)
-//   'location'    → waiting for location choice (1=Islamabad, 2=Punjab, 3=KPK, 4=Sindh)
-//   'menu'        → main service menu
-//   'lang'        → waiting for language switch choice
-//   'settings'    → settings menu
+//   'lang_select'  → waiting for initial language choice (1=EN, 2=UR)
+//   'location'     → waiting for province/location choice
+//   'service_type' → Punjab only: Citizen or Business services tab
+//   'category'     → waiting for category choice within province
+//   'service_menu' → waiting for service choice within category
+//   'lang'         → waiting for language switch choice
+//   'settings'     → settings menu
 
 const sessions = new Map();
 
 const DEFAULT_SESSION = {
-  lang:     'en',
-  step:     'lang_select',
-  location: null,   // 'islamabad' | 'punjab' | 'kpk' | 'sindh'
-  service:  null,   // 0–7 index
+  lang:        'en',
+  step:        'lang_select',
+  location:    null,      // 'islamabad' | 'punjab' | 'kpk' | 'sindh'
+  serviceType: null,      // 'citizen' | 'business' (Punjab only)
+  category:    null,      // category key within province
+  service:     null,      // service id within category
+  _greeted:    false,
 };
 
 function getSession(phone) {
@@ -26,10 +31,31 @@ function setSession(phone, data) {
   sessions.set(phone, { ...getSession(phone), ...data });
 }
 
-// Soft reset — keeps language + location, returns to menu
+// Soft reset — keeps lang + location + serviceType; resets to category step
 function softReset(phone) {
-  const { lang, location } = getSession(phone);
-  sessions.set(phone, { ...DEFAULT_SESSION, lang, step: 'menu', location });
+  const { lang, location, serviceType } = getSession(phone);
+  sessions.set(phone, {
+    ...DEFAULT_SESSION,
+    lang,
+    location,
+    serviceType,
+    step: 'category',
+    _greeted: true,
+  });
+}
+
+// Category reset — keeps lang + location + serviceType + category; resets service
+function categoryReset(phone) {
+  const { lang, location, serviceType, category } = getSession(phone);
+  sessions.set(phone, {
+    ...DEFAULT_SESSION,
+    lang,
+    location,
+    serviceType,
+    category,
+    step: 'service_menu',
+    _greeted: true,
+  });
 }
 
 // Hard reset — wipes everything, restarts from language selection
@@ -37,4 +63,4 @@ function hardReset(phone) {
   sessions.set(phone, { ...DEFAULT_SESSION });
 }
 
-module.exports = { getSession, setSession, softReset, hardReset };
+module.exports = { getSession, setSession, softReset, categoryReset, hardReset };

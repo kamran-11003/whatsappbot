@@ -22,7 +22,7 @@ async function sendMessage(to, text) {
     messaging_product: 'whatsapp',
     to,
     type: 'text',
-    text: { body: text, preview_url: false },
+    text: { body: text, preview_url: true },
   });
 }
 
