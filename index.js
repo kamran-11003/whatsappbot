@@ -55,9 +55,11 @@ app.post('/webhook', async (req, res) => {
     if (!message) return res.sendStatus(200); // ack non-message events
 
     const from = message.from;               // sender's WhatsApp number
+    console.log('[msg] from:', from, 'type:', message.type);
     const text = message.text?.body?.trim()
               || message.interactive?.button_reply?.id
               || message.interactive?.list_reply?.id;
+    console.log('[msg] text extracted:', text);
 
     if (!text) return res.sendStatus(200);   // ignore media/stickers/etc
 

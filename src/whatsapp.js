@@ -2,9 +2,12 @@
 
 const PHONE_ID  = process.env.WHATSAPP_PHONE_NUMBER_ID;
 const API_TOKEN = process.env.WHATSAPP_API_TOKEN;
-const API_URL   = `https://graph.facebook.com/v19.0/${PHONE_ID}/messages`;
+const API_URL   = `https://graph.facebook.com/v20.0/${PHONE_ID}/messages`;
+
+console.log('[boot] PHONE_ID set:', !!PHONE_ID, '| API_TOKEN set:', !!API_TOKEN);
 
 async function _post(payload) {
+  console.log('[send] to:', payload.to, 'type:', payload.type);
   const res = await fetch(API_URL, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_TOKEN}` },
@@ -13,6 +16,8 @@ async function _post(payload) {
   if (!res.ok) {
     const err = await res.text();
     console.error(`❌  WhatsApp API error [${res.status}]:`, err);
+  } else {
+    console.log(`✅  WhatsApp API sent [${res.status}]`);
   }
 }
 
