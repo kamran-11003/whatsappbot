@@ -2,7 +2,7 @@
 
 const PHONE_ID  = process.env.WHATSAPP_PHONE_NUMBER_ID;
 const API_TOKEN = process.env.WHATSAPP_API_TOKEN;
-const API_URL   = `https://graph.facebook.com/v20.0/${PHONE_ID}/messages`;
+const API_URL   = `https://graph.facebook.com/v22.0/${PHONE_ID}/messages`;
 
 console.log('[boot] PHONE_ID set:', !!PHONE_ID, '| API_TOKEN set:', !!API_TOKEN);
 
