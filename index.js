@@ -32,6 +32,7 @@ app.get('/webhook', (req, res) => {
   const token     = req.query['hub.verify_token'];
   const challenge = req.query['hub.challenge'];
 
+  console.log(`[verify] mode=${mode} received_token=${token} expected_token=${process.env.VERIFY_TOKEN}`);
   if (mode === 'subscribe' && token === process.env.VERIFY_TOKEN) {
     console.log('✅  Webhook verified by Meta');
     return res.status(200).send(challenge);
@@ -44,6 +45,7 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', async (req, res) => {
   try {
     const body = req.body;
+    console.log('[post] raw body object:', body?.object, '| full:', JSON.stringify(body)?.slice(0, 300));
     if (body.object !== 'whatsapp_business_account') return res.sendStatus(404);
 
     const entry   = body.entry?.[0];
@@ -54,9 +56,11 @@ app.post('/webhook', async (req, res) => {
     if (!message) return res.sendStatus(200); // ack non-message events
 
     const from = message.from;               // sender's WhatsApp number
+    console.log('[msg] from:', from, 'type:', message.type);
     const text = message.text?.body?.trim()
               || message.interactive?.button_reply?.id
               || message.interactive?.list_reply?.id;
+    console.log('[msg] text extracted:', text);
 
     if (!text) return res.sendStatus(200);   // ignore media/stickers/etc
 
