@@ -95,7 +95,7 @@ async function sendServiceItemMenu(phone, lang, locationKey, categoryId, service
     phone,
     `${promptText}\n\n📂 *${catLabel}*`,
     lang === 'ur' ? 'خدمت منتخب کریں' : 'Select Service',
-    [{ title: catLabel, rows }]
+    [{ title: trunc(catLabel), rows }]
   );
 }
 
