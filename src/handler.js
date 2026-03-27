@@ -87,9 +87,13 @@ async function sendServiceItemMenu(phone, lang, locationKey, categoryId, service
   })).slice(0, 10);
 
   const catLabel = lang === 'ur' ? cat.labelUr : cat.labelEn;
+  const promptText = (locationKey === 'sindh') 
+    ? (lang === 'ur' ? 'براہ کرم کوئی خدمت منتخب کریں 👇' : 'Please choose a service 👇')
+    : s.askServiceItem;
+
   await sendList(
     phone,
-    `${s.askServiceItem}\n\n📂 *${catLabel}*`,
+    `${promptText}\n\n📂 *${catLabel}*`,
     lang === 'ur' ? 'خدمت منتخب کریں' : 'Select Service',
     [{ title: catLabel, rows }]
   );
@@ -148,6 +152,22 @@ async function handleIncoming(phone, text) {
   // ══════════════════════════════════════════════════════════════════════════
   // GLOBAL KEYWORDS (available at any step after lang_select)
   // ══════════════════════════════════════════════════════════════════════════
+
+  // Greetings / Start (Soft Reset)
+  if (['hello', 'hi', 'salam', 'السلام علیکم', 'start', 'menu', 'help'].includes(lower) && step !== 'lang_select') {
+    hardReset(phone);
+    return sendLangButtons(phone, strings.askLang);
+  }
+
+  // Global Location Override (Quick Switch)
+  if (step !== 'lang_select' && step !== 'location') {
+    const locKey = LOC_MAP[lower] || LOC_MAP[input];
+    if (locKey) {
+      // Force user to location step and re-run handler
+      setSession(phone, { step: 'location', location: null, serviceType: null, category: null, service: null });
+      return handleIncoming(phone, input);
+    }
+  }
 
   // Hard reset
   if (lower === 'reset') {
@@ -323,7 +343,10 @@ async function handleIncoming(phone, text) {
       return sendNextActions(phone, lang);
     }
 
-    await sendMessage(phone, s.invalidOption);
+    const fallbackMsg = lang === 'ur' 
+      ? `${s.invalidOption}\n(یا شروع میں جانے کے لیے "reset" لکھیں)` 
+      : `${s.invalidOption}\n(Or type "reset" to start over)`;
+    await sendMessage(phone, fallbackMsg);
     return sendServiceItemMenu(phone, lang, location, category, serviceType);
   }
 
