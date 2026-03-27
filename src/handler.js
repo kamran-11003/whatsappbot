@@ -18,6 +18,7 @@ const { getServiceDetail } = require('./seed');
 
 const norm      = (t) => t.trim();
 const normLower = (t) => t.toLowerCase().trim();
+const trunc     = (t) => t.length > 24 ? t.substring(0, 23) + '…' : t;
 
 // ─── Send language selection buttons ────────────────────────────────────────
 async function sendLangButtons(phone, bodyText) {
@@ -38,7 +39,7 @@ async function sendLocationMenu(phone, lang, s) {
       rows: [
         { id: 'loc_1', title: lang === 'ur' ? '🏛️ اسلام آباد (وفاقی)' : '🏛️ Islamabad (Federal)' },
         { id: 'loc_2', title: lang === 'ur' ? '🌾 پنجاب'              : '🌾 Punjab' },
-        { id: 'loc_3', title: lang === 'ur' ? '🏔️ خیبر پختونخواہ'    : '🏔️ Khyber Pakhtunkhwa (KPK)' },
+        { id: 'loc_3', title: lang === 'ur' ? '🏔️ خیبر پختونخواہ'    : '🏔️ KPK' },
         { id: 'loc_4', title: lang === 'ur' ? '🌊 سندھ'               : '🌊 Sindh' },
       ],
     }]
@@ -61,7 +62,7 @@ async function sendCategoryMenu(phone, lang, locationKey, serviceType = null) {
 
   const rows = cats.map((cat) => ({
     id: cat.id,
-    title: lang === 'ur' ? cat.labelUr : cat.labelEn,
+    title: trunc(lang === 'ur' ? cat.labelUr : cat.labelEn),
   }));
 
   // WhatsApp list max 10 rows — split if needed
@@ -82,7 +83,7 @@ async function sendServiceItemMenu(phone, lang, locationKey, categoryId, service
 
   const rows = cat.services.map((svc) => ({
     id: svc.id,
-    title: lang === 'ur' ? svc.labelUr : svc.labelEn,
+    title: trunc(lang === 'ur' ? svc.labelUr : svc.labelEn),
   })).slice(0, 10);
 
   const catLabel = lang === 'ur' ? cat.labelUr : cat.labelEn;
