@@ -317,15 +317,26 @@ const DETAILS = {
     null, 'Information only | صرف معلومات'
   ),
 
-  isb_cg_2: `✅ *Emergency Numbers | ہنگامی نمبر*\n📍 Islamabad — ICT | اسلام آباد${DIV}` +
-    `🆘 *Emergency Contacts | ہنگامی رابطے:*\n` +
-    `• 🚔 Police | پولیس: *15*\n` +
-    `• 🚒 Rescue | ریسکیو: *1122*\n` +
-    `• 🚑 Ambulance | ایمبولینس: *1122*\n` +
-    `• 🔥 Fire Brigade | فائر بریگیڈ: *16*\n` +
-    `• 🏥 Edhi Foundation | ایدھی: *115*\n` +
-    `• 🆘 Emergency | ہنگامی: *1122*` +
-    TIP_EN + TIP_UR,
+  isb_cg_2: {
+    en: `✅ *Emergency Numbers*\n📍 Islamabad — ICT${DIV}` +
+      `🆘 *Emergency Contacts:*\n` +
+      `• 🚔 Police: *15*\n` +
+      `• 🚒 Rescue: *1122*\n` +
+      `• 🚑 Ambulance: *1122*\n` +
+      `• 🔥 Fire Brigade: *16*\n` +
+      `• 🏥 Edhi Foundation: *115*\n` +
+      `• 🆘 Emergency: *1122*` +
+      TIP_EN,
+    ur: `✅ *ہنگامی نمبر*\n📍 اسلام آباد${DIV}` +
+      `🆘 *ہنگامی رابطے:*\n` +
+      `• 🚔 پولیس: *15*\n` +
+      `• 🚒 ریسکیو: *1122*\n` +
+      `• 🚑 ایمبولینس: *1122*\n` +
+      `• 🔥 فائر بریگیڈ: *16*\n` +
+      `• 🏥 ایدھی: *115*\n` +
+      `• 🆘 ہنگامی: *1122*` +
+      TIP_UR,
+  },
 
   isb_cg_3: buildMsg(
     'Explore Islamabad (City Guide)', 'اسلام آباد دریافت کریں', 'Islamabad — ICT | اسلام آباد', isb,
@@ -1157,8 +1168,11 @@ const DETAILS = {
   ),
 };
 
-function getServiceDetail(serviceId) {
-  return DETAILS[serviceId] || null;
+function getServiceDetail(serviceId, lang = 'en') {
+  const detail = DETAILS[serviceId];
+  if (!detail) return null;
+  if (typeof detail === 'string') return detail;
+  return detail[lang] || detail.en || null;
 }
 
 module.exports = { getServiceDetail, DETAILS };

@@ -103,9 +103,9 @@ async function sendServiceItemMenu(phone, lang, locationKey, categoryId, service
 async function sendNextActions(phone, lang) {
   const s = strings[lang];
   await sendButtons(phone, s.nextAction, [
-    { id: 'another_service', title: lang === 'ur' ? '🔄 دوسری خدمت'    : '🔄 Another Service' },
-    { id: 'change_category', title: lang === 'ur' ? '📂 کیٹیگری بدلیں' : '📂 Change Category' },
-    { id: 'change_location', title: lang === 'ur' ? '📍 صوبہ بدلیں'    : '📍 Change Province' },
+    { id: 'another_service', title: lang === 'ur' ? '🔄 دوسری خدمت' : '🔄 Another Service' },
+    { id: 'change_location', title: lang === 'ur' ? '📍 صوبہ بدلیں'  : '📍 Change Province' },
+    { id: 'end_session',     title: lang === 'ur' ? '✅ اختتام'       : '✅ End Session' },
   ]);
 }
 
@@ -320,7 +320,7 @@ async function handleIncoming(phone, text) {
     const selectedSvc = cat.services.find((sv) => sv.id === input || sv.id === lower);
     if (selectedSvc) {
       setSession(phone, { service: selectedSvc.id });
-      const detail = getServiceDetail(selectedSvc.id);
+      const detail = getServiceDetail(selectedSvc.id, lang);
       if (!detail) {
         await sendMessage(phone, s.noService);
       } else {
@@ -334,7 +334,7 @@ async function handleIncoming(phone, text) {
     if (!isNaN(numIdx) && numIdx >= 0 && numIdx < cat.services.length) {
       const svc = cat.services[numIdx];
       setSession(phone, { service: svc.id });
-      const detail = getServiceDetail(svc.id);
+      const detail = getServiceDetail(svc.id, lang);
       if (!detail) {
         await sendMessage(phone, s.noService);
       } else {
