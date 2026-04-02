@@ -5,61 +5,83 @@
 
 const { APP_CONFIG, SINDH_APPS } = require('./services');
 
-const DIV = '\n━━━━━━━━━━━━━━━━━━━\n';
-const TIP_EN = '\n💡 *Tip:* Keep your CNIC and relevant documents ready!';
-const TIP_UR = '\n💡 *ٹِپ:* اپنا شناختی کارڈ اور متعلقہ دستاویزات تیار رکھیں!';
+const DIV = '\n-------------------\n';
+const TIP = { en: '\n*Tip:* Keep your CNIC and relevant documents ready.', ur: '\n*ٹِپ:* اپنا شناختی کارڈ اور متعلقہ دستاویزات تیار رکھیں۔' };
 
 // ─── Helper: build app download block ─────────────────────────────────────
-function appBlock(cfg, extraWeb = null) {
-  let block = `📱 *App:* ${cfg.nameEn} | ${cfg.nameUr}\n`;
-  if (cfg.playStore && cfg.playStore.startsWith('http')) {
-    block += `🤖 Android: ${cfg.playStore}\n`;
-  } else if (cfg.playStore) {
-    block += `🤖 Android: ${cfg.playStore}\n`;
-  }
-  if (cfg.appStore && cfg.appStore.startsWith('http')) {
-    block += `🍎 iOS: ${cfg.appStore}\n`;
-  } else if (cfg.appStore) {
-    block += `🍎 iOS: ${cfg.appStore}\n`;
-  }
-  block += `🌐 Web: ${cfg.web}`;
+function appBlock(cfg, lang, extraWeb = null) {
+  const name = lang === 'ur' ? (cfg.nameUr || cfg.nameEn) : cfg.nameEn;
+  let block = `*App:* ${name}\n`;
+  if (cfg.playStore) block += `Android: ${cfg.playStore}\n`;
+  if (cfg.appStore)  block += `iOS: ${cfg.appStore}\n`;
+  block += `Web: ${cfg.web}`;
   if (extraWeb) block += ` | ${extraWeb}`;
-  if (cfg.helpline) block += `\n📞 Helpline: ${cfg.helpline}`;
-  if (cfg.email)    block += `\n📧 ${cfg.email}`;
+  if (cfg.helpline) block += `\n${lang === 'ur' ? 'ہیلپ لائن' : 'Helpline'}: ${cfg.helpline}`;
+  if (cfg.email)    block += `\nEmail: ${cfg.email}`;
   return block;
 }
 
 // ─── Helper: build delivery model block ───────────────────────────────────
-function modelBlock(cfg) {
-  let block = `\n🏠 *Delivery | ڈیلیوری:* ${cfg.model}\n`;
-  block += `💰 *Charge | فیس:* ${cfg.charge}`;
-  if (cfg.courier) block += `\n🚚 *Courier | کوریئر:* ${cfg.courier}`;
-  block += `\n🕐 *Hours | اوقات:* ${cfg.hours}`;
+function modelBlock(cfg, lang) {
+  const model   = lang === 'ur' ? (cfg.modelUr   || cfg.model)   : cfg.model;
+  const charge  = lang === 'ur' ? (cfg.chargeUr  || cfg.charge)  : cfg.charge;
+  const courier = lang === 'ur' ? (cfg.courierUr || cfg.courier) : cfg.courier;
+  const hours   = lang === 'ur' ? (cfg.hoursUr   || cfg.hours)   : cfg.hours;
+  const L = lang === 'ur'
+    ? { delivery: 'ڈیلیوری', charge: 'فیس', courier: 'کوریئر', hours: 'اوقات' }
+    : { delivery: 'Delivery', charge: 'Charge', courier: 'Courier', hours: 'Hours' };
+  let block = `\n*${L.delivery}:* ${model}\n`;
+  block += `*${L.charge}:* ${charge}`;
+  if (courier) block += `\n*${L.courier}:* ${courier}`;
+  block += `\n*${L.hours}:* ${hours}`;
   return block;
 }
 
-// ─── Helper: build bilingual steps block ─────────────────────────────────
-function stepsBlock(stEn, stUr) {
-  return `📝 *Steps | اقدامات:*\n${stEn}\n\n${stUr}`;
+// ─── Helper: build single-language steps block ────────────────────────────
+function stepsBlock(steps, lang) {
+  const label = lang === 'ur' ? 'اقدامات' : 'Steps';
+  return `*${label}:*\n${lang === 'ur' ? steps.ur : steps.en}`;
 }
 
-// ─── Helper: build bilingual docs block ──────────────────────────────────
-function docsBlock(docsEn, docsUr) {
-  if (!docsEn) return '';
-  return `\n\n📋 *Required Docs | ضروری دستاویزات:*\n${docsEn}\n${docsUr}`;
+// ─── Helper: build single-language docs block ─────────────────────────────
+function docsBlock(docs, lang) {
+  if (!docs) return '';
+  const label = lang === 'ur' ? 'ضروری دستاویزات' : 'Required Documents';
+  return `\n\n*${label}:*\n${lang === 'ur' ? docs.ur : docs.en}`;
 }
 
-// ─── Helper: build full bilingual message ─────────────────────────────────
-function buildMsg(titleEn, titleUr, province, appCfg, steps, docs = null, note = null, extraWeb = null) {
-  let msg = `✅ *${titleEn} | ${titleUr}*\n📍 ${province}${DIV}`;
-  msg += appBlock(appCfg, extraWeb);
-  msg += modelBlock(appCfg);
+// ─── Helper: build single-language note ──────────────────────────────────
+function noteText(note, lang) {
+  if (!note) return '';
+  const text = note.includes('|')
+    ? (lang === 'ur' ? note.split('|')[1].trim() : note.split('|')[0].trim())
+    : note;
+  return `\n\n*${lang === 'ur' ? 'نوٹ' : 'Note'}:* ${text}`;
+}
+
+// ─── Helper: build message for one language ───────────────────────────────
+function buildLang(lang, titleEn, titleUr, provinceStr, appCfg, steps, docs, note, extraWeb) {
+  const title = lang === 'ur' ? titleUr : titleEn;
+  const prov  = provinceStr.includes('|')
+    ? (lang === 'ur' ? provinceStr.split('|')[1].trim() : provinceStr.split('|')[0].trim())
+    : provinceStr;
+  let msg = `*${title}*\n${prov}${DIV}`;
+  msg += appBlock(appCfg, lang, extraWeb);
+  msg += modelBlock(appCfg, lang);
   msg += DIV;
-  msg += stepsBlock(steps.en, steps.ur);
-  if (docs) msg += docsBlock(docs.en, docs.ur);
-  if (note) msg += `\n\n⚠️ *Note:* ${note}`;
-  msg += TIP_EN + TIP_UR;
+  msg += stepsBlock(steps, lang);
+  if (docs) msg += docsBlock(docs, lang);
+  msg += noteText(note, lang);
+  msg += TIP[lang];
   return msg;
+}
+
+// ─── Helper: build both language messages ─────────────────────────────────
+function buildMsg(titleEn, titleUr, province, appCfg, steps, docs = null, note = null, extraWeb = null) {
+  return {
+    en: buildLang('en', titleEn, titleUr, province, appCfg, steps, docs, note, extraWeb),
+    ur: buildLang('ur', titleEn, titleUr, province, appCfg, steps, docs, note, extraWeb),
+  };
 }
 
 // ─── ISB = Islamabad / PAK App ─────────────────────────────────────────────
@@ -318,24 +340,24 @@ const DETAILS = {
   ),
 
   isb_cg_2: {
-    en: `✅ *Emergency Numbers*\n📍 Islamabad — ICT${DIV}` +
-      `🆘 *Emergency Contacts:*\n` +
-      `• 🚔 Police: *15*\n` +
-      `• 🚒 Rescue: *1122*\n` +
-      `• 🚑 Ambulance: *1122*\n` +
-      `• 🔥 Fire Brigade: *16*\n` +
-      `• 🏥 Edhi Foundation: *115*\n` +
-      `• 🆘 Emergency: *1122*` +
-      TIP_EN,
-    ur: `✅ *ہنگامی نمبر*\n📍 اسلام آباد${DIV}` +
-      `🆘 *ہنگامی رابطے:*\n` +
-      `• 🚔 پولیس: *15*\n` +
-      `• 🚒 ریسکیو: *1122*\n` +
-      `• 🚑 ایمبولینس: *1122*\n` +
-      `• 🔥 فائر بریگیڈ: *16*\n` +
-      `• 🏥 ایدھی: *115*\n` +
-      `• 🆘 ہنگامی: *1122*` +
-      TIP_UR,
+    en: `*Emergency Numbers*\nIslamabad — ICT${DIV}` +
+      `*Emergency Contacts:*\n` +
+      `- Police: *15*\n` +
+      `- Rescue: *1122*\n` +
+      `- Ambulance: *1122*\n` +
+      `- Fire Brigade: *16*\n` +
+      `- Edhi Foundation: *115*\n` +
+      `- Emergency: *1122*` +
+      TIP.en,
+    ur: `*ہنگامی نمبر*\nاسلام آباد${DIV}` +
+      `*ہنگامی رابطے:*\n` +
+      `- پولیس: *15*\n` +
+      `- ریسکیو: *1122*\n` +
+      `- ایمبولینس: *1122*\n` +
+      `- فائر بریگیڈ: *16*\n` +
+      `- ایدھی: *115*\n` +
+      `- ہنگامی: *1122*` +
+      TIP.ur,
   },
 
   isb_cg_3: buildMsg(

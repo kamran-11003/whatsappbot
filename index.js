@@ -70,8 +70,8 @@ app.post('/webhook', async (req, res) => {
     if (session.step === 'lang_select' && !session._greeted) {
       setSession(from, { _greeted: true });
       await sendButtons(from, strings.askLang, [
-        { id: '1', title: 'English 🇬🇧' },
-        { id: '2', title: 'اردو 🇵🇰' },
+        { id: '1', title: 'English' },
+        { id: '2', title: 'Urdu' },
       ]);
       return res.sendStatus(200);
     }

@@ -18,13 +18,14 @@ const { getServiceDetail } = require('./seed');
 
 const norm      = (t) => t.trim();
 const normLower = (t) => t.toLowerCase().trim();
-const trunc     = (t) => t.length > 24 ? t.substring(0, 23) + '…' : t;
+const stripEmoji = (t) => t.replace(/[\u00A9\u00AE\u203C-\u3299\uFE0F]|[\u{1F000}-\u{1FFFF}]/gu, '').replace(/\s+/g, ' ').trim();
+const trunc     = (t) => { const s = stripEmoji(t); return s.length > 24 ? s.substring(0, 23) + '…' : s; };
 
 // ─── Send language selection buttons ────────────────────────────────────────
 async function sendLangButtons(phone, bodyText) {
   await sendButtons(phone, bodyText, [
-    { id: '1', title: 'English 🇬🇧' },
-    { id: '2', title: 'اردو 🇵🇰' },
+    { id: '1', title: 'English' },
+    { id: '2', title: 'Urdu' },
   ]);
 }
 
@@ -37,10 +38,10 @@ async function sendLocationMenu(phone, lang, s) {
     [{
       title: lang === 'ur' ? 'صوبے / مقامات' : 'Provinces / Locations',
       rows: [
-        { id: 'loc_1', title: lang === 'ur' ? '🏛️ اسلام آباد (وفاقی)' : '🏛️ Islamabad (Federal)' },
-        { id: 'loc_2', title: lang === 'ur' ? '🌾 پنجاب'              : '🌾 Punjab' },
-        { id: 'loc_3', title: lang === 'ur' ? '🏔️ خیبر پختونخواہ'    : '🏔️ KPK' },
-        { id: 'loc_4', title: lang === 'ur' ? '🌊 سندھ'               : '🌊 Sindh' },
+        { id: 'loc_1', title: lang === 'ur' ? 'اسلام آباد (وفاقی)' : 'Islamabad (Federal)' },
+        { id: 'loc_2', title: lang === 'ur' ? 'پنجاب'              : 'Punjab' },
+        { id: 'loc_3', title: lang === 'ur' ? 'خیبر پختونخواہ'    : 'KPK' },
+        { id: 'loc_4', title: lang === 'ur' ? 'سندھ'               : 'Sindh' },
       ],
     }]
   );
@@ -49,8 +50,8 @@ async function sendLocationMenu(phone, lang, s) {
 // ─── Send Punjab service type buttons (Citizen / Business) ───────────────────
 async function sendServiceTypeButtons(phone, lang, s) {
   await sendButtons(phone, s.askServiceType, [
-    { id: 'stype_citizen',  title: lang === 'ur' ? '👤 شہری خدمات'   : '👤 Citizen Services' },
-    { id: 'stype_business', title: lang === 'ur' ? '🏭 کاروباری خدمات' : '🏭 Business Services' },
+    { id: 'stype_citizen',  title: lang === 'ur' ? 'شہری خدمات'    : 'Citizen Services' },
+    { id: 'stype_business', title: lang === 'ur' ? 'کاروباری خدمات' : 'Business Services' },
   ]);
 }
 
@@ -87,13 +88,14 @@ async function sendServiceItemMenu(phone, lang, locationKey, categoryId, service
   })).slice(0, 10);
 
   const catLabel = lang === 'ur' ? cat.labelUr : cat.labelEn;
+  const cleanCatLabel = stripEmoji(catLabel);
   const promptText = (locationKey === 'sindh') 
-    ? (lang === 'ur' ? 'براہ کرم کوئی خدمت منتخب کریں 👇' : 'Please choose a service 👇')
+    ? (lang === 'ur' ? 'براہ کرم کوئی خدمت منتخب کریں:' : 'Please choose a service:')
     : s.askServiceItem;
 
   await sendList(
     phone,
-    `${promptText}\n\n📂 *${catLabel}*`,
+    `${promptText}\n\n*${cleanCatLabel}*`,
     lang === 'ur' ? 'خدمت منتخب کریں' : 'Select Service',
     [{ title: trunc(catLabel), rows }]
   );
@@ -103,18 +105,18 @@ async function sendServiceItemMenu(phone, lang, locationKey, categoryId, service
 async function sendNextActions(phone, lang) {
   const s = strings[lang];
   await sendButtons(phone, s.nextAction, [
-    { id: 'another_service', title: lang === 'ur' ? '🔄 دوسری خدمت' : '🔄 Another Service' },
-    { id: 'change_location', title: lang === 'ur' ? '📍 صوبہ بدلیں'  : '📍 Change Province' },
-    { id: 'end_session',     title: lang === 'ur' ? '✅ اختتام'       : '✅ End Session' },
+    { id: 'another_service', title: lang === 'ur' ? 'دوسری خدمت'  : 'Another Service' },
+    { id: 'change_location', title: lang === 'ur' ? 'صوبہ بدلیں'  : 'Change Province' },
+    { id: 'end_session',     title: lang === 'ur' ? 'اختتام'       : 'End Session' },
   ]);
 }
 
 // ─── Settings buttons ─────────────────────────────────────────────────────────
 async function sendSettings(phone, lang, s) {
   await sendButtons(phone, s.settingsMenu, [
-    { id: 'switch_lang',  title: lang === 'ur' ? '🌐 زبان تبدیل'   : '🌐 Switch Language' },
-    { id: 'set_location', title: lang === 'ur' ? '📍 صوبہ اپڈیٹ'  : '📍 Update Province' },
-    { id: 'restart',      title: lang === 'ur' ? '🔄 دوبارہ شروع' : '🔄 Restart' },
+    { id: 'switch_lang',  title: lang === 'ur' ? 'زبان تبدیل'   : 'Switch Language' },
+    { id: 'set_location', title: lang === 'ur' ? 'صوبہ اپڈیٹ'  : 'Update Province' },
+    { id: 'restart',      title: lang === 'ur' ? 'دوبارہ شروع'  : 'Restart' },
   ]);
 }
 
@@ -185,6 +187,7 @@ async function handleIncoming(phone, text) {
   if (['bye', 'exit', 'quit', 'end', 'باہر', 'خروج', 'end_session', 'ختم'].includes(lower) &&
       step !== 'lang_select') {
     hardReset(phone);
+    setSession(phone, { _greeted: true });
     return sendLangButtons(phone, s.goodbye);
   }
 
