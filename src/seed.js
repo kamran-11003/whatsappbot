@@ -1093,21 +1093,26 @@ const DETAILS = {
     null, 'Online only | صرف آن لائن'
   ),
 
-  kpk_trk_1: `✅ *Track All KPK Applications | تمام کے پی کے درخواستیں ٹریک کریں*\n📍 KPK — خیبر پختونخواہ${DIV}` +
-    `${appBlock(APP_CONFIG.kpk)}${DIV}` +
-    `📱 *How to Track | کیسے ٹریک کریں:*\n` +
-    `1. Open Dastak KPK App | داسترک ایپ کھولیں\n` +
-    `2. Go to "My Applications" | "میری درخواستیں" پر جائیں\n` +
-    `3. OR go to the specific department → "All Submitted Applications"\n` +
-    `   یا متعلقہ ڈیپارٹمنٹ → "تمام جمع درخواستیں"\n\n` +
-    `🔵 Status Types | اسٹیٹس کی اقسام:\n` +
-    `🟡 Pending | زیر التوا\n` +
-    `🔵 Under Review | زیر جائزہ\n` +
-    `🟠 Documents Required | دستاویزات درکار\n` +
-    `🟢 Approved | منظور\n` +
-    `🔴 Rejected | مسترد\n` +
-    `✅ Completed | مکمل` +
-    TIP_EN + TIP_UR,
+  kpk_trk_1: {
+    en: `*Track All KPK Applications*\nKPK${DIV}` +
+      `${appBlock(APP_CONFIG.kpk, 'en')}${DIV}` +
+      `*How to Track:*\n` +
+      `1. Open Dastak KPK App\n` +
+      `2. Go to "My Applications"\n` +
+      `3. OR go to the specific department -> "All Submitted Applications"\n\n` +
+      `*Status Types:*\n` +
+      `- Pending\n- Under Review\n- Documents Required\n- Approved\n- Rejected\n- Completed` +
+      TIP.en,
+    ur: `*تمام کے پی کے درخواستیں ٹریک کریں*\nKPK — خیبر پختونخواہ${DIV}` +
+      `${appBlock(APP_CONFIG.kpk, 'ur')}${DIV}` +
+      `*کیسے ٹریک کریں:*\n` +
+      `1. داسترک ایپ کھولیں\n` +
+      `2. "میری درخواستیں" پر جائیں\n` +
+      `3. یا متعلقہ ڈیپارٹمنٹ پر جائیں\n\n` +
+      `*اسٹیٹس کی اقسام:*\n` +
+      `- زیر التوا\n- زیر جائزہ\n- دستاویزات درکار\n- منظور\n- مسترد\n- مکمل` +
+      TIP.ur,
+  },
 
   // ═══════════════════════════════════════════════════════════════════════
   // SINDH — Multiple Apps
@@ -1121,21 +1126,34 @@ const DETAILS = {
     { en: '• CNIC\n• Vehicle purchase invoice\n• Customs clearance (if imported)\n• Insurance certificate', ur: '• شناختی کارڈ\n• گاڑی خریداری رسید\n• کسٹمز کلیئرنس (اگر درآمد ہو)\n• انشورنس سرٹیفکیٹ' }
   ),
 
-  sindh_2: `✅ *Property Tax | جائیداد ٹیکس*\n📍 Sindh | سندھ${DIV}` +
-    `📱 *App 1:* ${SINDH_APPS.excise.nameEn} | ${SINDH_APPS.excise.nameUr}\n` +
-    `🌐 Web: ${SINDH_APPS.excise.web} (view tax details)\n\n` +
-    `📱 *App 2:* ${SINDH_APPS.epay.nameEn} | ${SINDH_APPS.epay.nameUr}\n` +
-    `🌐 Web: ${SINDH_APPS.epay.web} (make payment)\n` +
-    `📞 Supports: Mobile banking, credit/debit cards, ATM, bank transfer${DIV}` +
-    `📝 *Steps | اقدامات:*\n` +
-    `1. Go to excise.gos.pk | excise.gos.pk پر جائیں\n` +
-    `2. Enter property ID or CNIC | پراپرٹی آئی ڈی یا شناختی کارڈ درج کریں\n` +
-    `3. View property tax assessment | جائیداد ٹیکس کا جائزہ دیکھیں\n` +
-    `4. For payment, go to epay.gos.pk | ادائیگی کے لیے epay.gos.pk پر جائیں\n` +
-    `5. Select "Property Tax" and complete payment | "جائیداد ٹیکس" منتخب کریں اور ادائیگی کریں\n` +
-    `6. Download receipt | رسید ڈاؤن لوڈ کریں\n\n` +
-    `📋 *Required | ضروری:* CNIC | شناختی کارڈ — Property ID | پراپرٹی آئی ڈی` +
-    TIP_EN + TIP_UR,
+  sindh_2: {
+    en: `*Property Tax*\nSindh${DIV}` +
+      `*App 1:* ${SINDH_APPS.excise.nameEn}\nWeb: ${SINDH_APPS.excise.web} (view tax details)\n\n` +
+      `*App 2:* ${SINDH_APPS.epay.nameEn}\nWeb: ${SINDH_APPS.epay.web} (make payment)\n` +
+      `Supports: Mobile banking, credit/debit cards, ATM, bank transfer${DIV}` +
+      `*Steps:*\n` +
+      `1. Go to excise.gos.pk\n` +
+      `2. Enter property ID or CNIC\n` +
+      `3. View property tax assessment\n` +
+      `4. For payment, go to epay.gos.pk\n` +
+      `5. Select "Property Tax" and complete payment\n` +
+      `6. Download receipt\n\n` +
+      `*Required:* CNIC — Property ID` +
+      TIP.en,
+    ur: `*جائیداد ٹیکس*\nسندھ${DIV}` +
+      `*ایپ 1:* ${SINDH_APPS.excise.nameUr}\nویب: ${SINDH_APPS.excise.web} (ٹیکس تفصیلات دیکھیں)\n\n` +
+      `*ایپ 2:* ${SINDH_APPS.epay.nameUr}\nویب: ${SINDH_APPS.epay.web} (ادائیگی کریں)\n` +
+      `سہولیات: موبائل بینکنگ، کریڈٹ/ڈیبٹ کارڈ، اے ٹی ایم، بینک ٹرانسفر${DIV}` +
+      `*اقدامات:*\n` +
+      `1. excise.gos.pk پر جائیں\n` +
+      `2. پراپرٹی آئی ڈی یا شناختی کارڈ درج کریں\n` +
+      `3. جائیداد ٹیکس کا جائزہ دیکھیں\n` +
+      `4. ادائیگی کے لیے epay.gos.pk پر جائیں\n` +
+      `5. "جائیداد ٹیکس" منتخب کریں اور ادائیگی کریں\n` +
+      `6. رسید ڈاؤن لوڈ کریں\n\n` +
+      `*ضروری:* شناختی کارڈ — پراپرٹی آئی ڈی` +
+      TIP.ur,
+  },
 
   sindh_3: buildMsg(
     'Domicile Certificate', 'ڈومیسائل سرٹیفکیٹ', 'Sindh | سندھ', SINDH_APPS.eservices,
